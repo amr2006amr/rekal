@@ -17,21 +17,12 @@ import {
 import { useLanguage } from '@/lib/i18n/LanguageContext';
 import { useAuth } from '@/lib/auth/AuthContext';
 import { LanguageSwitcher } from './LanguageSwitcher';
-import { getEffectiveSettings } from '@/lib/storage';
-import { CEFRLevel } from '@/types';
 
 export function Navbar() {
   const { t } = useLanguage();
-  const { user } = useAuth();
+  const { user, settings } = useAuth();
   const pathname = usePathname();
-  const [level, setLevel] = useState<CEFRLevel>('B2');
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-
-  useEffect(() => {
-    getEffectiveSettings(user?.id).then((settings) => {
-      setLevel(settings.level || 'B2');
-    });
-  }, [pathname, user]);
 
   // Close the mobile menu whenever the route changes
   useEffect(() => {
@@ -107,7 +98,7 @@ export function Navbar() {
             className="flex items-center gap-1 px-2.5 py-1 bg-brand-50 hover:bg-brand-100 dark:bg-brand-950/60 dark:hover:bg-brand-900/80 border border-brand-200 dark:border-brand-800 rounded-full text-brand-700 dark:text-brand-300 text-xs font-bold transition-colors"
           >
             <span className="text-[10px] text-brand-500 font-normal">{t('nav.level')}</span>
-            <span>{level}</span>
+            <span>{settings?.level || 'B2'}</span>
           </Link>
 
           {/* Language Switcher */}

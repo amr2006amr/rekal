@@ -10,17 +10,9 @@ import { CEFRLevel } from '@/types';
 
 export default function HomePage() {
   const { t, locale } = useLanguage();
-  const { user, loading: authLoading } = useAuth();
-  const [level, setLevel] = useState<CEFRLevel>('B2');
+  const { settings } = useAuth();
+  const level = settings?.level || 'B2';
   const Arrow = locale === 'ar' ? ArrowLeft : ArrowRight;
-
-  useEffect(() => {
-    if (!authLoading) {
-      getEffectiveSettings(user?.id).then((s) => {
-        setLevel(s.level || 'B2');
-      });
-    }
-  }, [authLoading, user?.id]);
 
   return (
     <div className="flex flex-col items-center justify-center py-6 sm:py-12 space-y-12">

@@ -19,31 +19,38 @@ import { CheckCircle2, Sparkles, ArrowRight, ArrowLeft, Zap, RefreshCw, BarChart
 
 export default function ReviewPage() {
   const { t, locale } = useLanguage();
-  const { user, loading: authLoading } = useAuth();
+  const { user, settings, settingsLoading, updateSettings } = useAuth();
 
   const [mounted, setMounted] = useState(false);
   const [queue, setQueue] = useState<ReviewQueueItem[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [settings, setSettings] = useState<UserSettings | null>(null);
   const [progressMap, setProgressMap] = useState<Record<string, UserProgress>>({});
   const [isUpdating, setIsUpdating] = useState(false);
 
-  const loadSession = useCallback(async () => {
-    const userSettings = await getEffectiveSettings(user?.id);
-    const userProgress = await getEffectiveProgressMap(user?.id);
-    setSettings(userSettings);
-    setProgressMap(userProgress);
-    const dueWords = buildReviewQueue(userSettings.level, userProgress);
+  const loadQueue = useCallback(
+  (currentSettings: UserSettings, userProgress: Record<string, UserProgress>) => {
+    const dueWords = buildReviewQueue(currentSettings.level, userProgress);
     setQueue(dueWords);
     setCurrentIndex(0);
-  }, [user?.id]);
+  },
+  []
+);
+
+const loadSession = useCallback(async () => {
+  if (!settings) return;
+  const userProgress = await getEffectiveProgressMap(user?.id);
+  setProgressMap(userProgress);
+  loadQueue(settings, userProgress);
+}, [user?.id, settings, loadQueue]);
 
   useEffect(() => {
-    setMounted(true);
+  setMounted(true);
+  if (!settingsLoading && settings) {
     loadSession();
-  }, [loadSession]);
+  }
+}, [settingsLoading, settings, loadSession]);
 
-  if (!mounted || !settings) {
+  if (!mounted || settingsLoading || !settings) {
     return (
       <div className="flex items-center justify-center min-h-[60vh]">
         <div className="w-8 h-8 border-4 border-brand-500 border-t-transparent rounded-full animate-spin" />
@@ -70,7 +77,7 @@ export default function ReviewPage() {
         settings
       );
 
-      setSettings(updatedSet);
+      await updateSettings(updatedSet);
       setProgressMap((prev) => ({
         ...prev,
         [currentItem.word.id]: updatedProg,

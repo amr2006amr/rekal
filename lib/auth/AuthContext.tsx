@@ -1,14 +1,20 @@
 'use client';
 
-import React, { createContext, useContext, useEffect, useState } from 'react';
+import React, { createContext, useContext, useEffect, useState, useCallback } from 'react';
 import { User, Session } from '@supabase/supabase-js';
 import { supabase, isSupabaseConfigured } from '@/lib/supabase/client';
+import { getEffectiveSettings, saveEffectiveSettings } from '@/lib/storage';
+import { UserSettings } from '@/types';
 
 interface AuthContextType {
   user: User | null;
   session: Session | null;
   loading: boolean;
   isConfigured: boolean;
+  settings: UserSettings | null;
+  settingsLoading: boolean;
+  refreshSettings: () => Promise<void>;
+  updateSettings: (updated: UserSettings) => Promise<void>;
   signInWithEmail: (email: string, password: string) => Promise<{ error: Error | null }>;
   signUpWithEmail: (email: string, password: string) => Promise<{ error: Error | null }>;
   signInWithGoogle: () => Promise<{ error: Error | null }>;
@@ -21,6 +27,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [session, setSession] = useState<Session | null>(null);
   const [loading, setLoading] = useState(true);
+  const [settings, setSettings] = useState<UserSettings | null>(null);
+  const [settingsLoading, setSettingsLoading] = useState(true);
   const isConfigured = isSupabaseConfigured();
 
   useEffect(() => {
@@ -29,7 +37,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       return;
     }
 
-    // Get initial session
     supabase.auth.getSession().then(({ data: { session } }) => {
       setSession(session);
       setUser(session?.user ?? null);
@@ -38,7 +45,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       setLoading(false);
     });
 
-    // Listen for auth state changes
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((_event, session) => {
@@ -51,6 +57,34 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       subscription.unsubscribe();
     };
   }, [isConfigured]);
+
+  // Load settings once whenever the user identity changes (login/logout/guest)
+  useEffect(() => {
+    let cancelled = false;
+    setSettingsLoading(true);
+    getEffectiveSettings(user?.id).then((s) => {
+      if (!cancelled) {
+        setSettings(s);
+        setSettingsLoading(false);
+      }
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [user?.id]);
+
+  const refreshSettings = useCallback(async () => {
+    const s = await getEffectiveSettings(user?.id);
+    setSettings(s);
+  }, [user?.id]);
+
+  const updateSettings = useCallback(
+    async (updated: UserSettings) => {
+      setSettings(updated); // Optimistic local update — instant UI feedback
+      await saveEffectiveSettings(updated, user?.id);
+    },
+    [user?.id]
+  );
 
   const signInWithEmail = async (email: string, password: string) => {
     if (!isConfigured) {
@@ -97,6 +131,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const { error } = await supabase.auth.signOut();
     setUser(null);
     setSession(null);
+    setSettings(null);
     return { error };
   };
 
@@ -107,6 +142,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         session,
         loading,
         isConfigured,
+        settings,
+        settingsLoading,
+        refreshSettings,
+        updateSettings,
         signInWithEmail,
         signUpWithEmail,
         signInWithGoogle,

@@ -26,30 +26,24 @@ import {
 
 export default function DashboardPage() {
   const { t, locale } = useLanguage();
-  const { user, loading: authLoading } = useAuth();
+  const { user, settings, settingsLoading } = useAuth();
 
   const [mounted, setMounted] = useState(false);
-  const [settings, setSettings] = useState<UserSettings | null>(null);
   const [progressMap, setProgressMap] = useState<Record<string, UserProgress>>({});
   const [words, setWords] = useState<WordItem[]>([]);
   const Arrow = locale === 'ar' ? ArrowLeft : ArrowRight;
 
   useEffect(() => {
-    setMounted(true);
-    const loadData = async () => {
-      const [s, prog] = await Promise.all([
-        getEffectiveSettings(user?.id),
-        getEffectiveProgressMap(user?.id),
-      ]);
-      setSettings(s);
-      setProgressMap(prog);
-      setWords(getAllWords());
-    };
-
-    loadData();
+  setMounted(true);
+  const loadData = async () => {
+    const prog = await getEffectiveProgressMap(user?.id);
+    setProgressMap(prog);
+    setWords(getAllWords());
+  };
+  loadData();
 }, [user?.id]);
 
-  if (!mounted || !settings) {
+  if (!mounted || settingsLoading || !settings) {
     return (
       <div className="flex items-center justify-center min-h-[60vh]">
         <div className="w-8 h-8 border-4 border-brand-500 border-t-transparent rounded-full animate-spin" />

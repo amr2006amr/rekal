@@ -12,21 +12,17 @@ import { Check, RotateCcw, Shield, User as UserIcon, LogOut, LogIn, Sparkles, Ch
 
 export default function SettingsPage() {
   const { t, locale } = useLanguage();
-  const { user, signOut, loading: authLoading } = useAuth();
+  const { user, signOut, settings, settingsLoading, updateSettings, refreshSettings } = useAuth();
   const router = useRouter();
 
   const [mounted, setMounted] = useState(false);
-  const [settings, setSettings] = useState<UserSettings | null>(null);
   const [resetSuccess, setResetSuccess] = useState(false);
 
   useEffect(() => {
-    setMounted(true);
-    getEffectiveSettings(user?.id).then((s) => {
-      setSettings(s);
-    });
-  }, [user?.id]);
+  setMounted(true);
+}, []);
 
-  if (!mounted || !settings) {
+  if (!mounted || settingsLoading || !settings) {
     return (
       <div className="flex items-center justify-center min-h-[60vh]">
         <div className="w-8 h-8 border-4 border-brand-500 border-t-transparent rounded-full animate-spin" />
@@ -35,23 +31,21 @@ export default function SettingsPage() {
   }
 
   const handleLevelChange = async (newLevel: CEFRLevel) => {
-    const updated: UserSettings = {
-      ...settings,
-      level: newLevel,
-    };
-    await saveEffectiveSettings(updated, user?.id);
-    setSettings(updated);
+  const updated: UserSettings = {
+    ...settings,
+    level: newLevel,
   };
+  await updateSettings(updated);
+};
 
   const handleResetData = async () => {
-    if (window.confirm(t('settings.reset_confirm'))) {
-      await clearUserData(user?.id);
-      const refreshed = await getEffectiveSettings(user?.id);
-      setSettings(refreshed);
-      setResetSuccess(true);
-      setTimeout(() => setResetSuccess(false), 3000);
-    }
-  };
+  if (window.confirm(t('settings.reset_confirm'))) {
+    await clearUserData(user?.id);
+    await refreshSettings();
+    setResetSuccess(true);
+    setTimeout(() => setResetSuccess(false), 3000);
+  }
+};
 
   const handleSignOut = async () => {
     await signOut();
