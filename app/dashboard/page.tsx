@@ -37,20 +37,19 @@ export default function DashboardPage() {
   useEffect(() => {
     setMounted(true);
     const loadData = async () => {
-      const s = await getEffectiveSettings(user?.id);
+      const [s, prog] = await Promise.all([
+        getEffectiveSettings(user?.id),
+        getEffectiveProgressMap(user?.id),
+      ]);
       setSettings(s);
-      const prog = await getEffectiveProgressMap(user?.id);
       setProgressMap(prog);
-      const all = getAllWords();
-      setWords(all);
+      setWords(getAllWords());
     };
 
-    if (!authLoading) {
-      loadData();
-    }
-  }, [authLoading, user?.id]);
+    loadData();
+}, [user?.id]);
 
-  if (!mounted || authLoading || !settings) {
+  if (!mounted || !settings) {
     return (
       <div className="flex items-center justify-center min-h-[60vh]">
         <div className="w-8 h-8 border-4 border-brand-500 border-t-transparent rounded-full animate-spin" />

@@ -40,12 +40,10 @@ export default function ReviewPage() {
 
   useEffect(() => {
     setMounted(true);
-    if (!authLoading) {
-      loadSession();
-    }
-  }, [authLoading, loadSession]);
+    loadSession();
+  }, [loadSession]);
 
-  if (!mounted || authLoading || !settings) {
+  if (!mounted || !settings) {
     return (
       <div className="flex items-center justify-center min-h-[60vh]">
         <div className="w-8 h-8 border-4 border-brand-500 border-t-transparent rounded-full animate-spin" />

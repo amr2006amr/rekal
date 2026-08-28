@@ -21,14 +21,12 @@ export default function SettingsPage() {
 
   useEffect(() => {
     setMounted(true);
-    if (!authLoading) {
-      getEffectiveSettings(user?.id).then((s) => {
-        setSettings(s);
-      });
-    }
-  }, [authLoading, user?.id]);
+    getEffectiveSettings(user?.id).then((s) => {
+      setSettings(s);
+    });
+  }, [user?.id]);
 
-  if (!mounted || authLoading || !settings) {
+  if (!mounted || !settings) {
     return (
       <div className="flex items-center justify-center min-h-[60vh]">
         <div className="w-8 h-8 border-4 border-brand-500 border-t-transparent rounded-full animate-spin" />
