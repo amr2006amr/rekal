@@ -31,26 +31,27 @@ export function Navbar() {
 
   return (
     <header className="sticky top-0 z-40 w-full border-b border-slate-200 dark:border-slate-800 bg-white/90 dark:bg-slate-950/90 backdrop-blur-md">
-      <div className="max-w-5xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
+      <div className="max-w-5xl mx-auto px-3 sm:px-6 h-14 sm:h-16 flex items-center justify-between gap-2">
         {/* Brand Logo & Name */}
         <Link
           href="/"
-          className="flex items-center gap-2.5 group transition-transform active:scale-95"
+          className="flex items-center gap-2 sm:gap-2.5 group transition-transform active:scale-95 min-w-0 shrink-0"
         >
-          <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-brand-600 to-emerald-400 flex items-center justify-center text-white shadow-md shadow-brand-500/20 group-hover:scale-105 transition-transform">
-            <Sparkles size={20} className="stroke-[2.2]" />
+          <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-gradient-to-tr from-brand-600 to-emerald-400 flex items-center justify-center text-white shadow-md shadow-brand-500/20 group-hover:scale-105 transition-transform shrink-0">
+            <Sparkles size={18} className="stroke-[2.2] sm:hidden" />
+            <Sparkles size={20} className="stroke-[2.2] hidden sm:block" />
           </div>
-          <div className="flex flex-col">
-            <span className="text-xl font-black tracking-tight text-slate-900 dark:text-white leading-none">
+          <div className="flex flex-col min-w-0">
+            <span className="text-base sm:text-xl font-black tracking-tight text-slate-900 dark:text-white leading-none truncate">
               {t('app_name')}
             </span>
-            <span className="text-[10px] text-slate-400 font-medium">
+            <span className="hidden sm:block text-[10px] text-slate-400 font-medium">
               CEFR Spaced Repetition
             </span>
           </div>
         </Link>
 
-        {/* Center Navigation */}
+        {/* Center Navigation - desktop only */}
         <nav className="hidden md:flex items-center gap-1 bg-slate-100 dark:bg-slate-900 p-1 rounded-full border border-slate-200/80 dark:border-slate-800">
           {navLinks.map((link) => {
             const Icon = link.icon;
@@ -73,12 +74,12 @@ export function Navbar() {
         </nav>
 
         {/* Actions (Level Badge + Language Switcher + User/Login) */}
-        <div className="flex items-center gap-2 sm:gap-2.5">
-          {/* Level Badge */}
+        <div className="flex items-center gap-1.5 sm:gap-2.5 shrink-0">
+          {/* Level Badge - hidden on mobile, shown from md up */}
           <Link
             href="/onboarding"
             title={t('dashboard.change_level')}
-            className="flex items-center gap-1 px-2.5 py-1 bg-brand-50 hover:bg-brand-100 dark:bg-brand-950/60 dark:hover:bg-brand-900/80 border border-brand-200 dark:border-brand-800 rounded-full text-brand-700 dark:text-brand-300 text-xs font-bold transition-colors"
+            className="hidden md:flex items-center gap-1 px-2.5 py-1 bg-brand-50 hover:bg-brand-100 dark:bg-brand-950/60 dark:hover:bg-brand-900/80 border border-brand-200 dark:border-brand-800 rounded-full text-brand-700 dark:text-brand-300 text-xs font-bold transition-colors"
           >
             <span className="text-[10px] text-brand-500 font-normal">{t('nav.level')}</span>
             <span>{level}</span>
@@ -92,14 +93,14 @@ export function Navbar() {
             <Link
               href="/settings"
               title={user.email || 'Account'}
-              className="w-8 h-8 rounded-full bg-brand-100 dark:bg-brand-950 border border-brand-300 dark:border-brand-700 text-brand-700 dark:text-brand-300 font-bold text-xs flex items-center justify-center transition-transform hover:scale-105"
+              className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-brand-100 dark:bg-brand-950 border border-brand-300 dark:border-brand-700 text-brand-700 dark:text-brand-300 font-bold text-xs flex items-center justify-center transition-transform hover:scale-105 shrink-0"
             >
               {user.email ? user.email.charAt(0).toUpperCase() : <UserIcon size={14} />}
             </Link>
           ) : (
             <Link
               href="/login"
-              className="flex items-center gap-1 px-3 py-1.5 bg-slate-900 hover:bg-slate-800 dark:bg-brand-600 dark:hover:bg-brand-500 text-white rounded-full text-xs font-bold transition-all shadow-sm"
+              className="flex items-center gap-1 px-2.5 sm:px-3 py-1.5 bg-slate-900 hover:bg-slate-800 dark:bg-brand-600 dark:hover:bg-brand-500 text-white rounded-full text-xs font-bold transition-all shadow-sm shrink-0"
             >
               <LogIn size={13} />
               <span className="hidden sm:inline">{t('nav.login')}</span>
