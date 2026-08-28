@@ -1,11 +1,13 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import Link from 'next/link';
 import { WordItem, UserProgress, ReviewRating } from '@/types';
 import { AudioButton } from './AudioButton';
 import { DifficultyButtons } from './DifficultyButtons';
 import { useLanguage } from '@/lib/i18n/LanguageContext';
-import { Eye, BookOpen, Quote, Sparkles, History } from 'lucide-react';
+import { useAuth } from '@/lib/auth/AuthContext';
+import { Eye, BookOpen, Quote, Sparkles, History, Lock, LogIn } from 'lucide-react';
 
 interface WordCardProps {
   word: WordItem;
@@ -23,12 +25,23 @@ const RATING_BADGE_COLORS: Record<string, string> = {
 
 export function WordCard({ word, progress, isNew = false, onRate }: WordCardProps) {
   const { locale, t } = useLanguage();
+  const { user } = useAuth();
   const [isRevealed, setIsRevealed] = useState(false);
+  const [showLoginPrompt, setShowLoginPrompt] = useState(false);
 
-  // Reset revealed state when word changes
+  // Reset revealed / prompt state when word changes
   useEffect(() => {
     setIsRevealed(false);
+    setShowLoginPrompt(false);
   }, [word.id]);
+
+  const handleRevealClick = () => {
+    if (!user) {
+      setShowLoginPrompt(true);
+      return;
+    }
+    setIsRevealed(true);
+  };
 
   // Spacebar toggle handler
   useEffect(() => {
@@ -36,12 +49,16 @@ export function WordCard({ word, progress, isNew = false, onRate }: WordCardProp
       if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) return;
       if (e.code === 'Space') {
         e.preventDefault();
+        if (!user) {
+          setShowLoginPrompt(true);
+          return;
+        }
         setIsRevealed((prev) => !prev);
       }
     };
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, []);
+  }, [user]);
 
   const ratingBadgeClass = progress?.last_rating
     ? RATING_BADGE_COLORS[progress.last_rating]
@@ -52,18 +69,14 @@ export function WordCard({ word, progress, isNew = false, onRate }: WordCardProp
       {/* Top Meta Bar */}
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center gap-2">
-          {/* Level Badge */}
           <span className="px-3 py-1 bg-slate-100 dark:bg-slate-800 text-slate-800 dark:text-slate-200 rounded-full text-xs font-black tracking-wider border border-slate-200/60 dark:border-slate-700">
             {word.level}
           </span>
-          
-          {/* Part of Speech */}
           <span className="px-2.5 py-0.5 bg-brand-50 dark:bg-brand-950/40 text-brand-700 dark:text-brand-300 rounded-md text-xs font-semibold italic">
             {word.part_of_speech}
           </span>
         </div>
 
-        {/* New / Last Rating Badge */}
         {isNew ? (
           <span className="flex items-center gap-1 text-[11px] font-bold text-amber-600 bg-amber-50 dark:bg-amber-950/50 border border-amber-200 dark:border-amber-900/60 px-2.5 py-0.5 rounded-full">
             <Sparkles size={12} />
@@ -81,26 +94,53 @@ export function WordCard({ word, progress, isNew = false, onRate }: WordCardProp
 
       {/* Main Word Presentation Area */}
       <div className="flex flex-col items-center text-center my-6 space-y-3">
-        {/* Word and Audio Button */}
         <div className="flex items-center justify-center gap-3 flex-wrap">
           <h1 className="text-4xl sm:text-5xl font-black text-slate-900 dark:text-white tracking-tight">
             {word.word}
           </h1>
           <AudioButton word={word.word} size="lg" />
         </div>
-
-        {/* Phonetic Pronunciation */}
         <p className="text-sm font-mono text-slate-400 dark:text-slate-500 tracking-wide dir-ltr">
           {word.pronunciation}
         </p>
       </div>
 
-      {/* Hidden / Revealed Content Area */}
-      {!isRevealed ? (
+      {/* Hidden / Revealed / Login-Required Content Area */}
+      {showLoginPrompt ? (
+        <div className="my-8 flex flex-col items-center justify-center text-center space-y-4 animate-in fade-in zoom-in-95 duration-200">
+          <div className="w-14 h-14 bg-brand-50 dark:bg-brand-950/50 text-brand-600 rounded-2xl flex items-center justify-center">
+            <Lock size={26} />
+          </div>
+          <div className="space-y-1.5">
+            <h3 className="text-lg font-black text-slate-900 dark:text-white">
+              {locale === 'ar' ? 'سجّل دخولك للمتابعة' : 'Sign in to continue'}
+            </h3>
+            <p className="text-sm text-slate-600 dark:text-slate-400 max-w-xs mx-auto">
+              {locale === 'ar'
+                ? 'تحتاج لتسجيل الدخول أولاً حتى تقدر تراجع الكلمات ويتم حفظ تقدمك.'
+                : 'Sign in first to reveal meanings and save your review progress.'}
+            </p>
+          </div>
+          <Link
+            href="/login"
+            className="w-full sm:w-auto px-8 py-3.5 bg-brand-600 hover:bg-brand-500 text-white font-bold rounded-2xl shadow-lg transition-all duration-200 transform active:scale-95 flex items-center justify-center gap-2"
+          >
+            <LogIn size={18} />
+            <span>{locale === 'ar' ? 'تسجيل الدخول' : 'Sign In'}</span>
+          </Link>
+          <button
+            type="button"
+            onClick={() => setShowLoginPrompt(false)}
+            className="text-xs font-semibold text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 transition-colors"
+          >
+            {locale === 'ar' ? 'رجوع' : 'Back'}
+          </button>
+        </div>
+      ) : !isRevealed ? (
         <div className="my-8 flex flex-col items-center justify-center">
           <button
             type="button"
-            onClick={() => setIsRevealed(true)}
+            onClick={handleRevealClick}
             className="w-full sm:w-auto px-8 py-3.5 bg-slate-900 hover:bg-slate-800 dark:bg-brand-600 dark:hover:bg-brand-500 text-white font-bold rounded-2xl shadow-lg transition-all duration-200 transform active:scale-95 flex items-center justify-center gap-2 group"
           >
             <Eye size={18} className="group-hover:scale-110 transition-transform" />
@@ -112,7 +152,6 @@ export function WordCard({ word, progress, isNew = false, onRate }: WordCardProp
         </div>
       ) : (
         <div className="my-6 space-y-5 animate-in fade-in zoom-in-95 duration-200">
-          {/* Definition Block */}
           <div className="bg-slate-50 dark:bg-slate-800/60 p-4 sm:p-5 rounded-2xl border border-slate-200/80 dark:border-slate-800">
             <div className="flex items-center gap-1.5 text-xs font-bold text-slate-400 mb-2">
               <BookOpen size={14} className="text-brand-500" />
@@ -123,18 +162,15 @@ export function WordCard({ word, progress, isNew = false, onRate }: WordCardProp
             </p>
           </div>
 
-          {/* 3 Examples Block */}
           {word.examples && word.examples.length > 0 && (
             <div className="bg-brand-50/50 dark:bg-brand-950/20 p-4 sm:p-5 rounded-2xl border border-brand-100 dark:border-brand-900/40 space-y-3">
               <div className="flex items-center gap-1.5 text-xs font-bold text-brand-600 dark:text-brand-400 mb-1">
                 <Quote size={14} />
                 <span>{locale === 'ar' ? 'أمثلة في سياق الاستخدام (3 أمثلة)' : 'Examples in Context (3 Examples)'}</span>
               </div>
-              
               <div className="space-y-3 divide-y divide-brand-100/70 dark:divide-brand-900/30">
                 {word.examples.map((ex, idx) => (
                   <div key={idx} className={idx > 0 ? 'pt-3' : ''}>
-                    {/* English sentence + audio button */}
                     <div className="flex items-start gap-2">
                       <p className="flex-1 text-sm sm:text-base font-medium text-slate-800 dark:text-slate-200 italic dir-ltr text-left">
                         <span className="inline-block w-5 text-xs font-mono font-bold text-brand-500 not-italic">
@@ -144,8 +180,6 @@ export function WordCard({ word, progress, isNew = false, onRate }: WordCardProp
                       </p>
                       <AudioButton word={ex.sentence} size="sm" />
                     </div>
-
-                    {/* Arabic translation of example (when viewing in Arabic) */}
                     {locale === 'ar' && ex.translation_ar && (
                       <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 mt-1 pl-5 rtl:pl-0 rtl:pr-5">
                         {ex.translation_ar}
@@ -157,7 +191,6 @@ export function WordCard({ word, progress, isNew = false, onRate }: WordCardProp
             </div>
           )}
 
-          {/* Prompt & Rating Buttons */}
           <div className="pt-4 border-t border-slate-100 dark:border-slate-800">
             <p className="text-xs font-semibold text-center text-slate-500 dark:text-slate-400 mb-3">
               {t('review.rate_prompt')}

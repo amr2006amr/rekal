@@ -15,7 +15,7 @@ import {
   DAILY_FREE_LIMIT,
   ReviewQueueItem,
 } from '@/lib/storage';
-import { CheckCircle2, Sparkles, ArrowRight, ArrowLeft, Zap, RefreshCw, BarChart3, LogIn, Lock } from 'lucide-react';
+import { CheckCircle2, Sparkles, ArrowRight, ArrowLeft, Zap, RefreshCw, BarChart3 } from 'lucide-react';
 
 export default function ReviewPage() {
   const { t, locale } = useLanguage();
@@ -40,48 +40,12 @@ export default function ReviewPage() {
 
   useEffect(() => {
     setMounted(true);
-    if (!authLoading && user) {
+    if (!authLoading) {
       loadSession();
     }
-  }, [authLoading, user, loadSession]);
+  }, [authLoading, loadSession]);
 
-  if (!mounted || authLoading) {
-    return (
-      <div className="flex items-center justify-center min-h-[60vh]">
-        <div className="w-8 h-8 border-4 border-brand-500 border-t-transparent rounded-full animate-spin" />
-      </div>
-    );
-  }
-
-  // State: Not Logged In
-  if (!user) {
-    return (
-      <div className="max-w-lg mx-auto my-12 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-8 text-center space-y-6 shadow-xl animate-in zoom-in-95 duration-200">
-        <div className="w-16 h-16 bg-brand-50 dark:bg-brand-950/50 text-brand-600 rounded-2xl flex items-center justify-center mx-auto">
-          <Lock size={32} />
-        </div>
-        <div className="space-y-2">
-          <h2 className="text-2xl font-black text-slate-900 dark:text-white">
-            {locale === 'ar' ? 'سجّل دخولك للمتابعة' : 'Sign in to continue'}
-          </h2>
-          <p className="text-sm text-slate-600 dark:text-slate-400">
-            {locale === 'ar'
-              ? 'تحتاج لتسجيل الدخول أولاً حتى تقدر تراجع الكلمات ويتم حفظ تقدمك.'
-              : 'You need to sign in first to review words and save your progress.'}
-          </p>
-        </div>
-        <Link
-          href="/login"
-          className="w-full py-3.5 bg-brand-600 hover:bg-brand-500 text-white font-bold rounded-2xl transition-all flex items-center justify-center gap-2"
-        >
-          <LogIn size={18} />
-          <span>{locale === 'ar' ? 'تسجيل الدخول' : 'Sign In'}</span>
-        </Link>
-      </div>
-    );
-  }
-
-  if (!settings) {
+  if (!mounted || authLoading || !settings) {
     return (
       <div className="flex items-center justify-center min-h-[60vh]">
         <div className="w-8 h-8 border-4 border-brand-500 border-t-transparent rounded-full animate-spin" />
@@ -108,18 +72,15 @@ export default function ReviewPage() {
         settings
       );
 
-      // Update in-memory state
       setSettings(updatedSet);
       setProgressMap((prev) => ({
         ...prev,
         [currentItem.word.id]: updatedProg,
       }));
 
-      // Advance card
       if (currentIndex + 1 < queue.length) {
         setCurrentIndex((prev) => prev + 1);
       } else {
-        // Re-evaluate queue
         const refreshedMap = {
           ...progressMap,
           [currentItem.word.id]: updatedProg,
@@ -133,7 +94,6 @@ export default function ReviewPage() {
     }
   };
 
-  // State: Daily Limit Hit
   if (isDailyLimitReached) {
     return (
       <div className="max-w-lg mx-auto my-12 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-8 text-center space-y-6 shadow-xl">
@@ -149,7 +109,6 @@ export default function ReviewPage() {
           </p>
         </div>
 
-        {/* Upgrade Prompt */}
         <div className="bg-gradient-to-br from-brand-50 to-emerald-50 dark:from-brand-950/40 dark:to-emerald-950/20 border border-brand-200 dark:border-brand-900 rounded-2xl p-5 space-y-3">
           <div className="flex items-center justify-center gap-1.5 text-brand-700 dark:text-brand-300">
             <Sparkles size={16} />
@@ -181,7 +140,6 @@ export default function ReviewPage() {
     );
   }
 
-  // State: All Caught Up (No cards due)
   if (!currentItem || queue.length === 0) {
     return (
       <div className="max-w-lg mx-auto my-12 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-8 text-center space-y-6 shadow-xl animate-in zoom-in-95 duration-200">
@@ -219,7 +177,6 @@ export default function ReviewPage() {
 
   return (
     <div className="max-w-xl mx-auto py-4 space-y-6">
-      {/* Progress & Limit Header */}
       <ProgressBar
         currentIdx={currentIndex}
         totalCards={queue.length}
@@ -227,7 +184,6 @@ export default function ReviewPage() {
         subscriptionStatus={settings.subscription_status}
       />
 
-      {/* Main Flashcard */}
       <WordCard
         key={currentItem.word.id}
         word={currentItem.word}
