@@ -81,7 +81,7 @@ export default function DashboardPage() {
             {user ? (
               <span className="flex items-center gap-1 text-emerald-600 dark:text-emerald-400 font-semibold">
                 <ShieldCheck size={14} />
-                <span>{user.email} (Supabase Sync ✓)</span>
+                <span>{user.email}</span>
               </span>
             ) : (
               <Link href="/login" className="flex items-center gap-1 text-brand-600 hover:underline">

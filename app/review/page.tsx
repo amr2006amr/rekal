@@ -15,42 +15,83 @@ import {
   DAILY_FREE_LIMIT,
   ReviewQueueItem,
 } from '@/lib/storage';
-import { CheckCircle2, Sparkles, ArrowRight, ArrowLeft, Zap, RefreshCw, BarChart3 } from 'lucide-react';
+import { CheckCircle2, Sparkles, ArrowRight, ArrowLeft, Zap, RefreshCw, BarChart3, AlertTriangle } from 'lucide-react';
 
 export default function ReviewPage() {
   const { t, locale } = useLanguage();
-  const { user, settings, settingsLoading, updateSettings } = useAuth();
+  const { user, settings, settingsLoading, setLocalSettings, updateSettings } = useAuth();
 
   const [mounted, setMounted] = useState(false);
   const [queue, setQueue] = useState<ReviewQueueItem[]>([]);
+  const [queueLoading, setQueueLoading] = useState(true);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [progressMap, setProgressMap] = useState<Record<string, UserProgress>>({});
   const [isUpdating, setIsUpdating] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
 
   const loadQueue = useCallback(
-  (currentSettings: UserSettings, userProgress: Record<string, UserProgress>) => {
-    const dueWords = buildReviewQueue(currentSettings.level, userProgress);
-    setQueue(dueWords);
-    setCurrentIndex(0);
-  },
-  []
-);
+    (currentSettings: UserSettings, userProgress: Record<string, UserProgress>) => {
+      const dueWords = buildReviewQueue(currentSettings.level, userProgress);
+      setQueue(dueWords);
+      setCurrentIndex(0);
+    },
+    []
+  );
 
-const loadSession = useCallback(async () => {
-  if (!settings) return;
-  const userProgress = await getEffectiveProgressMap(user?.id);
-  setProgressMap(userProgress);
-  loadQueue(settings, userProgress);
-}, [user?.id, settings, loadQueue]);
+  const loadSession = useCallback(async () => {
+    if (!settings) return;
+    setQueueLoading(true);
+    const userProgress = await getEffectiveProgressMap(user?.id);
+    setProgressMap(userProgress);
+    loadQueue(settings, userProgress);
+    setQueueLoading(false);
+    // Deliberately depends on settings?.level (a primitive), not on the
+    // whole `settings` object — see the comment on the effect below for
+    // the full reasoning. `settings` itself is still read fresh from the
+    // closure when this runs.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user?.id, settings?.level, loadQueue]);
 
   useEffect(() => {
-  setMounted(true);
-  if (!settingsLoading && settings) {
-    loadSession();
-  }
-}, [settingsLoading, settings, loadSession]);
+    setMounted(true);
+  }, []);
 
-  if (!mounted || settingsLoading || !settings) {
+  useEffect(() => {
+    // IMPORTANT: this intentionally depends on `settings?.level`, NOT on
+    // the `settings` object itself.
+    //
+    // Rating a word calls setLocalSettings() with a brand-new settings
+    // object (daily_reviews_used incremented by one). If this effect
+    // depended on `settings` directly, that new object reference alone
+    // would re-trigger it after EVERY single rating — even though nothing
+    // about which words belong in the queue actually changed. That was
+    // silently causing, on every rating:
+    //   1. A full extra network request straight from the browser to
+    //      Supabase re-fetching the user's ENTIRE review history
+    //      (visible in the Network tab as a `user_progress` request with
+    //      no word_id filter), instead of just the one word we needed.
+    //   2. The whole queue being rebuilt and currentIndex reset to 0,
+    //      racing against handleRate's own "move to next card" update.
+    // That combination is what was still causing noticeable lag/jank
+    // even after optimizing the /api/review endpoint itself.
+    //
+    // We only want to reload the full session when the signed-in user
+    // changes, or when their CEFR level changes (the level is what
+    // actually determines which words belong in the queue) — never on
+    // every daily-counter tick.
+    if (!settingsLoading && settings) {
+      loadSession();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [settingsLoading, settings?.level, user?.id]);
+
+  // While auth/settings are loading, OR the review queue itself hasn't
+  // finished being built yet, show the spinner. Without the queueLoading
+  // check, `queue` starts as an empty array and — for a brief moment
+  // between settings finishing and loadSession() resolving — the
+  // "completed / no reviews due" screen below would flash on screen even
+  // though there ARE words waiting to be loaded.
+  if (!mounted || settingsLoading || !settings || queueLoading) {
     return (
       <div className="flex items-center justify-center min-h-[60vh]">
         <div className="w-8 h-8 border-4 border-brand-500 border-t-transparent rounded-full animate-spin" />
@@ -67,6 +108,7 @@ const loadSession = useCallback(async () => {
   const handleRate = async (rating: ReviewRating) => {
     if (!currentItem || isUpdating) return;
 
+    setSubmitError(null);
     setIsUpdating(true);
     try {
       const { progress: updatedProg, settings: updatedSet } = await processReview(
@@ -77,7 +119,12 @@ const loadSession = useCallback(async () => {
         settings
       );
 
-      await updateSettings(updatedSet);
+      // processReview already persisted the new settings server-side (via
+      // /api/review) when signed in, so we only sync local state here —
+      // NOT another write to Supabase. Calling updateSettings() here would
+      // fire a second, redundant network write and is what caused the
+      // noticeable delay before advancing to the next card.
+      setLocalSettings(updatedSet);
       setProgressMap((prev) => ({
         ...prev,
         [currentItem.word.id]: updatedProg,
@@ -94,8 +141,40 @@ const loadSession = useCallback(async () => {
         setQueue(nextDue);
         setCurrentIndex(0);
       }
+    } catch (err: any) {
+      if (err?.message === 'daily_limit_reached') {
+        // The server rejected this review because the account has actually
+        // hit the free-tier cap — our local `settings` state was just stale
+        // (e.g. reviewed from another tab/device in the meantime). Re-fetch
+        // the real settings so the daily-limit screen below renders instead
+        // of the review silently failing. This is just a local sync, not a
+        // write, so setLocalSettings is correct here too.
+        const freshSettings = await getEffectiveSettings(user?.id);
+        setLocalSettings(freshSettings);
+      } else {
+        console.error('Failed to record review:', err);
+        setSubmitError(
+          locale === 'ar'
+            ? 'تعذر حفظ المراجعة، حاول مرة أخرى'
+            : 'Could not save your review, please try again'
+        );
+      }
     } finally {
       setIsUpdating(false);
+    }
+  };
+
+  // Skip the current word entirely: no reveal, no rating, not recorded as
+  // reviewed, doesn't touch progress/settings/stats. Just move on.
+  const handleSkip = () => {
+    if (!currentItem) return;
+
+    if (currentIndex + 1 < queue.length) {
+      setCurrentIndex((prev) => prev + 1);
+    } else {
+      // Was the last card in the queue — rebuild it the same way a normal
+      // "session complete" refresh does.
+      loadSession();
     }
   };
 
@@ -189,12 +268,20 @@ const loadSession = useCallback(async () => {
         subscriptionStatus={settings.subscription_status}
       />
 
+      {submitError && (
+        <div className="p-3 bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-900/60 text-xs text-rose-700 dark:text-rose-300 rounded-xl flex items-center gap-2">
+          <AlertTriangle size={14} />
+          <span>{submitError}</span>
+        </div>
+      )}
+
       <WordCard
         key={currentItem.word.id}
         word={currentItem.word}
         progress={currentItem.progress}
         isNew={currentItem.isNew}
         onRate={handleRate}
+        onSkip={handleSkip}
       />
     </div>
   );

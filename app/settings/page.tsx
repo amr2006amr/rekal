@@ -5,10 +5,11 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useLanguage } from '@/lib/i18n/LanguageContext';
 import { useAuth } from '@/lib/auth/AuthContext';
+import { supabase } from '@/lib/supabase/client';
 import { CEFRLevel, UserSettings } from '@/types';
 import { getEffectiveSettings, saveEffectiveSettings, clearUserData } from '@/lib/storage';
 import { LEVEL_ORDER } from '@/lib/data/words';
-import { Check, RotateCcw, Shield, User as UserIcon, LogOut, LogIn, Sparkles, CheckCircle2, AlertTriangle, Zap } from 'lucide-react';
+import { Check, RotateCcw, Shield, User as UserIcon, LogOut, LogIn, Sparkles, CheckCircle2, AlertTriangle, Zap, Loader2 } from 'lucide-react';
 
 export default function SettingsPage() {
   const { t, locale } = useLanguage();
@@ -17,10 +18,12 @@ export default function SettingsPage() {
 
   const [mounted, setMounted] = useState(false);
   const [resetSuccess, setResetSuccess] = useState(false);
+  const [upgrading, setUpgrading] = useState(false);
+  const [upgradeError, setUpgradeError] = useState<string | null>(null);
 
   useEffect(() => {
-  setMounted(true);
-}, []);
+    setMounted(true);
+  }, []);
 
   if (!mounted || settingsLoading || !settings) {
     return (
@@ -31,25 +34,66 @@ export default function SettingsPage() {
   }
 
   const handleLevelChange = async (newLevel: CEFRLevel) => {
-  const updated: UserSettings = {
-    ...settings,
-    level: newLevel,
+    const updated: UserSettings = {
+      ...settings,
+      level: newLevel,
+    };
+    await updateSettings(updated);
   };
-  await updateSettings(updated);
-};
 
   const handleResetData = async () => {
-  if (window.confirm(t('settings.reset_confirm'))) {
-    await clearUserData(user?.id);
-    await refreshSettings();
-    setResetSuccess(true);
-    setTimeout(() => setResetSuccess(false), 3000);
-  }
-};
+    if (window.confirm(t('settings.reset_confirm'))) {
+      await clearUserData(user?.id);
+      await refreshSettings();
+      setResetSuccess(true);
+      setTimeout(() => setResetSuccess(false), 3000);
+    }
+  };
 
   const handleSignOut = async () => {
     await signOut();
     router.push('/login');
+  };
+
+  const handleUpgrade = async () => {
+    if (!user) {
+      router.push('/login');
+      return;
+    }
+
+    setUpgradeError(null);
+    setUpgrading(true);
+
+    try {
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
+      const token = session?.access_token;
+
+      if (!token) {
+        router.push('/login');
+        return;
+      }
+
+      const res = await fetch('/api/checkout', {
+        method: 'POST',
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      const data = await res.json();
+
+      if (!res.ok || !data.url) {
+        throw new Error(data.error || 'checkout_failed');
+      }
+
+      window.location.href = data.url;
+    } catch (err) {
+      console.error('Checkout error:', err);
+      setUpgradeError(
+        locale === 'ar' ? 'تعذر بدء عملية الدفع، حاول مرة أخرى' : 'Could not start checkout, please try again'
+      );
+      setUpgrading(false);
+    }
   };
 
   const isPro = settings.subscription_status === 'active';
@@ -191,13 +235,40 @@ export default function SettingsPage() {
               {t('settings.plan_price_pro')} {t('settings.plan_period_monthly')}
             </p>
             {!isPro && (
-              <button
-                type="button"
-                className="w-full mt-1 px-3 py-2 bg-brand-600 hover:bg-brand-500 text-white rounded-xl text-xs font-bold transition-colors flex items-center justify-center gap-1.5"
-              >
-                <Zap size={13} />
-                <span>{t('settings.upgrade_btn')}</span>
-              </button>
+              <>
+                <button
+                  type="button"
+                  onClick={handleUpgrade}
+                  disabled={upgrading}
+                  className="w-full mt-1 px-3 py-2 bg-brand-600 hover:bg-brand-500 disabled:opacity-60 disabled:cursor-not-allowed text-white rounded-xl text-xs font-bold transition-colors flex items-center justify-center gap-1.5"
+                >
+                  {upgrading ? (
+                    <Loader2 size={13} className="animate-spin" />
+                  ) : (
+                    <Zap size={13} />
+                  )}
+                  <span>{t('settings.upgrade_btn')}</span>
+                </button>
+
+                {/* Payment policy consent — shown under the upgrade button since it starts checkout */}
+                <p className="text-[10px] leading-relaxed text-center text-slate-400 dark:text-slate-500">
+                  {t('settings.upgrade_consent_prefix')}{' '}
+                  <Link
+                    href="/payment-refund"
+                    target="_blank"
+                    className="text-brand-600 dark:text-brand-400 font-semibold hover:underline"
+                  >
+                    {t('settings.payment_policy_link')}
+                  </Link>
+                </p>
+
+                {upgradeError && (
+                  <p className="text-[11px] text-rose-600 dark:text-rose-400 flex items-center gap-1">
+                    <AlertTriangle size={12} />
+                    <span>{upgradeError}</span>
+                  </p>
+                )}
+              </>
             )}
           </div>
         </div>

@@ -7,13 +7,14 @@ import { AudioButton } from './AudioButton';
 import { DifficultyButtons } from './DifficultyButtons';
 import { useLanguage } from '@/lib/i18n/LanguageContext';
 import { useAuth } from '@/lib/auth/AuthContext';
-import { Eye, BookOpen, Quote, Sparkles, History, Lock, LogIn } from 'lucide-react';
+import { Eye, BookOpen, Quote, Sparkles, History, Lock, LogIn, SkipForward } from 'lucide-react';
 
 interface WordCardProps {
   word: WordItem;
   progress?: UserProgress;
   isNew?: boolean;
   onRate: (rating: ReviewRating) => void;
+  onSkip: () => void;
 }
 
 const RATING_BADGE_COLORS: Record<string, string> = {
@@ -23,7 +24,7 @@ const RATING_BADGE_COLORS: Record<string, string> = {
   easy: 'text-blue-800 bg-blue-100 border-blue-200 dark:text-blue-300 dark:bg-blue-950/40 dark:border-blue-800/80',
 };
 
-export function WordCard({ word, progress, isNew = false, onRate }: WordCardProps) {
+export function WordCard({ word, progress, isNew = false, onRate, onSkip }: WordCardProps) {
   const { locale, t } = useLanguage();
   const { user } = useAuth();
   const [isRevealed, setIsRevealed] = useState(false);
@@ -137,7 +138,7 @@ export function WordCard({ word, progress, isNew = false, onRate }: WordCardProp
           </button>
         </div>
       ) : !isRevealed ? (
-        <div className="my-8 flex flex-col items-center justify-center">
+        <div className="my-8 flex flex-col items-center justify-center gap-3">
           <button
             type="button"
             onClick={handleRevealClick}
@@ -146,9 +147,14 @@ export function WordCard({ word, progress, isNew = false, onRate }: WordCardProp
             <Eye size={18} className="group-hover:scale-110 transition-transform" />
             <span>{t('review.show_answer')}</span>
           </button>
-          <span className="text-[11px] text-slate-400 mt-2 font-mono">
-            {t('review.press_space')}
-          </span>
+          <button
+            type="button"
+            onClick={onSkip}
+            className="flex items-center gap-1.5 text-xs font-semibold text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 transition-colors"
+          >
+            <SkipForward size={14} />
+            <span>{t('review.skip_btn')}</span>
+          </button>
         </div>
       ) : (
         <div className="my-6 space-y-5 animate-in fade-in zoom-in-95 duration-200">

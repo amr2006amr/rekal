@@ -15,6 +15,7 @@ interface AuthContextType {
   settingsLoading: boolean;
   refreshSettings: () => Promise<void>;
   updateSettings: (updated: UserSettings) => Promise<void>;
+  setLocalSettings: (updated: UserSettings) => void;
   signInWithEmail: (email: string, password: string) => Promise<{ error: Error | null }>;
   signUpWithEmail: (email: string, password: string) => Promise<{ error: Error | null }>;
   signInWithGoogle: () => Promise<{ error: Error | null }>;
@@ -86,6 +87,21 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     [user?.id]
   );
 
+  /**
+   * Update the in-memory settings only, without writing to the database.
+   *
+   * Use this after a server call that already persisted the new settings
+   * itself (e.g. POST /api/review, which returns the freshly-saved
+   * settings). Calling `updateSettings` in that situation would trigger a
+   * second, redundant write to Supabase and the extra network round trip
+   * is what causes a noticeable delay before moving to the next review
+   * card. This setter just syncs local state with what the server already
+   * confirmed.
+   */
+  const setLocalSettings = useCallback((updated: UserSettings) => {
+    setSettings(updated);
+  }, []);
+
   const signInWithEmail = async (email: string, password: string) => {
     if (!isConfigured) {
       return { error: new Error('Supabase is not configured. Please set NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY') };
@@ -146,6 +162,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         settingsLoading,
         refreshSettings,
         updateSettings,
+        setLocalSettings,
         signInWithEmail,
         signUpWithEmail,
         signInWithGoogle,

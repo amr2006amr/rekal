@@ -31,11 +31,14 @@
     "switch_to_login": "Sign in",
     "success_signup": "Account created successfully! Check your email if verification is required, or sign in.",
     "error_generic": "Authentication failed. Please check your credentials and try again.",
-    "supabase_not_configured": "Please configure your Supabase URL and Anon Key in .env.local to enable cloud auth."
+    "supabase_not_configured": "Please configure your Supabase URL and Anon Key in .env.local to enable cloud auth.",
+    "google_consent_prefix": "By continuing with Google, you agree to our",
+    "signup_consent_prefix": "By creating an account, you agree to our",
+    "privacy_policy_link": "Privacy Policy"
   },
   "home": {
     "hero_title": "Save thousands of words to memory, forever",
-    "hero_desc": "Smart, effortless spaced repetition built on CEFR standards and SM-2 algorithm. No tedious setup, no manual card creation.",
+    "hero_desc": "Smart, effortless spaced repetition built on CEFR standards and SM-2 algorithm.",
     "start_now": "Start Reviewing Now",
     "select_level": "Choose Your Level",
     "feature_1_title": "Zero Setup Required",
@@ -61,7 +64,7 @@
     "title": "Daily Review Session",
     "show_answer": "Show Meaning & Context",
     "hide_answer": "Hide Details",
-    "press_space": "or press Space",
+    "skip_btn": "Skip",
     "rate_prompt": "How well did you recall this word?",
     "ratings": {
       "again": "Again",
@@ -123,6 +126,20 @@
     "reset_desc_detail": "This will permanently delete your entire review history and reset all your statistics, starting fresh as if you were a new user.",
     "reset_warning": "This action cannot be undone.",
     "reset_btn": "Reset All Test Data",
-    "reset_confirm": "Are you sure you want to reset all progress data?"
-  }
+    "reset_confirm": "Are you sure you want to reset all progress data?",
+    "upgrade_consent_prefix": "By upgrading, you agree to our",
+    "payment_policy_link": "Payment & Refund Policy"
+  },
+  "footer": {
+  "important_links_title": "Important Links",
+  "home": "Home",
+  "guide": "Usage Guidelines",
+  "settings": "Settings",
+  "subscription": "Subscription",
+  "contact_support_title": "Contact & Support",
+  "privacy_policy": "Privacy Policy",
+  "payment_policy": "Payment Policy",
+  "contact_us": "Contact Us",
+  "rights_reserved": "All rights reserved to Rekal © {year}"
+}
 }

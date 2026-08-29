@@ -5,7 +5,6 @@ import {
   getUserSettings,
   saveUserSettings,
   getUserProgressMap,
-  recordReviewInDB,
   resetUserDataInDB,
   DEFAULT_SETTINGS,
 } from './services/supabaseService';
@@ -168,7 +167,20 @@ export function buildReviewQueue(
 }
 
 /**
- * Process a review for a user
+ * Process a review for a user.
+ *
+ * For a signed-in user with Supabase configured, this no longer writes to
+ * the database directly from the browser. It calls the secure
+ * /api/review endpoint instead, which re-checks the user's identity and
+ * their current subscription_status / daily_reviews_used straight from the
+ * database before recording anything. That's what actually enforces the
+ * free-tier daily limit — a client can't bypass it by calling this
+ * function with forged `currentSettings`, because the server no longer
+ * looks at client-supplied settings at all.
+ *
+ * Throws an Error with message 'daily_limit_reached' when a free user has
+ * hit DAILY_FREE_LIMIT reviews for the day — callers should catch this and
+ * show an upgrade prompt.
  */
 export async function processReview(
   wordId: string,
@@ -178,10 +190,34 @@ export async function processReview(
   currentSettings?: UserSettings
 ): Promise<{ progress: UserProgress; settings: UserSettings }> {
   if (userId && isSupabaseConfigured()) {
-    return await recordReviewInDB(userId, wordId, rating, currentProgress, currentSettings);
+    const {
+      data: { session },
+    } = await supabase.auth.getSession();
+    const token = session?.access_token;
+
+    if (!token) {
+      throw new Error('not_authenticated');
+    }
+
+    const res = await fetch('/api/review', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({ wordId, rating }),
+    });
+
+    const data = await res.json().catch(() => ({}));
+
+    if (!res.ok) {
+      throw new Error(data.error || 'review_failed');
+    }
+
+    return { progress: data.progress, settings: data.settings };
   }
 
-  // Fallback
+  // Fallback (guest / Supabase not configured): local-only, unchanged.
   const sm2 = calculateNextReview(currentProgress, rating);
   const now = new Date().toISOString();
 
