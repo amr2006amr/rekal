@@ -64,6 +64,8 @@ export default function DashboardPage() {
 
   const learningCount = reviewedCount - masteredCount;
 
+  const isPro = settings.subscription_status === 'active';
+
   return (
     <div className="space-y-8 py-4 sm:py-6">
       {/* Header & Quick Action */}
@@ -171,7 +173,7 @@ export default function DashboardPage() {
             <span className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white">
               {settings.daily_reviews_used || 0}
             </span>
-            <span className="text-xs text-slate-400">/ {DAILY_FREE_LIMIT}</span>
+            <span className="text-xs text-slate-400">/ {isPro ? '∞' : DAILY_FREE_LIMIT}</span>
           </div>
         </div>
       </div>
