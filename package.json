@@ -10,6 +10,7 @@
     "generate:words": "npx tsx scripts/generate-word-content.ts"
   },
   "dependencies": {
+    "@next/third-parties": "^16.3.3",
     "@supabase/supabase-js": "^2.48.1",
     "clsx": "^2.1.1",
     "lucide-react": "^0.475.0",
