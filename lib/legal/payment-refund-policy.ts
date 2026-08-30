@@ -5,12 +5,12 @@ import { PolicyBlock, PolicyContent } from './privacy-policy';
 
 export const paymentRefundPolicyContent: Record<'ar' | 'en', PolicyContent> = {
   ar: {
-    title: 'سياسة الدفع والاسترجاع — ركال (Rekal)',
-    lastUpdated: 'آخر تحديث: [التاريخ]',
+    title: 'سياسة الدفع والاسترجاع — رِكال (Rekal)',
+    lastUpdated: 'آخر تحديث سبتمبر 2026',
     blocks: [
       {
         type: 'p',
-        text: 'توضح هذه السياسة تفاصيل الاشتراك المدفوع بموقع [اسم الشركة]، وكيفية معالجة الدفع، وشروط الإلغاء والاسترجاع. يُرجى قراءتها بعناية قبل الاشتراك.',
+        text: 'توضح هذه السياسة تفاصيل الاشتراك المدفوع بموقع رِكال، وكيفية معالجة الدفع، وشروط الإلغاء والاسترجاع. يُرجى قراءتها بعناية قبل الاشتراك.',
       },
       { type: 'h2', text: '١. طبيعة الاشتراك' },
       {
@@ -27,7 +27,7 @@ export const paymentRefundPolicyContent: Record<'ar' | 'en', PolicyContent> = {
       { type: 'h2', text: '٢. من يعالج الدفع' },
       {
         type: 'p',
-        text: 'جميع المدفوعات تُعالج بالكامل عبر Lemon Squeezy، الذي يعمل بصفة "بائع السجل" (Merchant of Record). يعني هذا أن المعاملة المالية تتم رسميًا بينك وبين Lemon Squeezy مباشرة، وليس بينك وبين [اسم الشركة] بشكل مباشر.',
+        text: 'جميع المدفوعات تُعالج بالكامل عبر Lemon Squeezy، الذي يعمل بصفة "بائع السجل" (Merchant of Record). يعني هذا أن المعاملة المالية تتم رسميًا بينك وبين Lemon Squeezy مباشرة، وليس بينك وبين رِكال بشكل مباشر.',
       },
       {
         type: 'ul',
@@ -54,12 +54,12 @@ export const paymentRefundPolicyContent: Record<'ar' | 'en', PolicyContent> = {
       },
       {
         type: 'p',
-        text: 'لأي استفسار متعلق بالفوترة أو الاسترداد، يُرجى التواصل أولًا مع دعم [اسم الشركة] عبر [البريد الإلكتروني للدعم]، مع العلم أن معالجة أي طلب استرداد فعلي تخضع لإجراءات Lemon Squeezy.',
+        text: 'لأي استفسار متعلق بالفوترة أو الاسترداد، يُرجى التواصل أولًا مع دعم رِكال عبر amr.k.qaid@gmail.com، مع العلم أن معالجة أي طلب استرداد فعلي تخضع لإجراءات Lemon Squeezy.',
       },
       { type: 'h2', text: '٥. إخلاء المسؤولية وحدود المسؤولية' },
       {
         type: 'p',
-        text: 'يُقدَّم الموقع وخدماته "كما هي" دون أي ضمانات من أي نوع، صريحة أو ضمنية. لا يتحمل [اسم الشركة] المسؤولية عن أي أضرار غير مباشرة أو عرضية أو تبعية تنشأ عن استخدامك للموقع. في جميع الأحوال، لا تتجاوز المسؤولية الإجمالية لـ [اسم الشركة] تجاهك المبلغ الذي دفعته فعليًا خلال الأشهر الثلاثة السابقة للحادثة موضوع المطالبة.',
+        text: 'يُقدَّم الموقع وخدماته "كما هي" دون أي ضمانات من أي نوع، صريحة أو ضمنية. لا يتحمل رِكال المسؤولية عن أي أضرار غير مباشرة أو عرضية أو تبعية تنشأ عن استخدامك للموقع. في جميع الأحوال، لا تتجاوز المسؤولية الإجمالية لـ رِكال تجاهك المبلغ الذي دفعته فعليًا خلال الأشهر الثلاثة السابقة للحادثة موضوع المطالبة.',
       },
       { type: 'h2', text: '٦. القانون الحاكم والجهة القضائية المختصة' },
       {
@@ -73,16 +73,16 @@ export const paymentRefundPolicyContent: Record<'ar' | 'en', PolicyContent> = {
       },
       { type: 'h2', text: '٨. تواصل معنا' },
       { type: 'p', text: 'لأي استفسار يتعلق بالدفع أو الاشتراك، يمكنك التواصل معنا عبر:' },
-      { type: 'ul', items: ['📧 [البريد الإلكتروني للدعم]', '🌐 [رابط الموقع]'] },
+      { type: 'ul', items: ['📧 amr.k.qaid@gmail.com'] },
     ],
   },
   en: {
     title: 'Payment & Refund Policy — Rekal',
-    lastUpdated: 'Last updated: [Date]',
+    lastUpdated: 'Last updated: September 2026',
     blocks: [
       {
         type: 'p',
-        text: 'This policy explains the details of the paid subscription on the [Company Name] website, how payment is processed, and the terms of cancellation and refunds. Please read it carefully before subscribing.',
+        text: 'This policy explains the details of the paid subscription on the Rekal website, how payment is processed, and the terms of cancellation and refunds. Please read it carefully before subscribing.',
       },
       { type: 'h2', text: '1. Nature of the Subscription' },
       {
@@ -99,7 +99,7 @@ export const paymentRefundPolicyContent: Record<'ar' | 'en', PolicyContent> = {
       { type: 'h2', text: '2. Who Processes Payment' },
       {
         type: 'p',
-        text: 'All payments are processed entirely through Lemon Squeezy, which acts as the Merchant of Record. This means the financial transaction takes place officially between you and Lemon Squeezy directly, not directly between you and [Company Name].',
+        text: 'All payments are processed entirely through Lemon Squeezy, which acts as the Merchant of Record. This means the financial transaction takes place officially between you and Lemon Squeezy directly, not directly between you and Rekal.',
       },
       {
         type: 'ul',
@@ -126,12 +126,12 @@ export const paymentRefundPolicyContent: Record<'ar' | 'en', PolicyContent> = {
       },
       {
         type: 'p',
-        text: 'For any billing or refund inquiries, please first contact [Company Name] support at [Support Email], noting that processing of any actual refund request is subject to Lemon Squeezy\'s procedures.',
+        text: 'For any billing or refund inquiries, please first contact Rekal support at amr.k.qaid@gmail.com, noting that processing of any actual refund request is subject to Lemon Squeezy\'s procedures.',
       },
       { type: 'h2', text: '5. Disclaimer and Limitation of Liability' },
       {
         type: 'p',
-        text: 'The website and its services are provided "as is," without warranties of any kind, express or implied. [Company Name] shall not be liable for any indirect, incidental, or consequential damages arising from your use of the website. In all cases, [Company Name]\'s total liability to you shall not exceed the amount you actually paid during the three months preceding the incident giving rise to the claim.',
+        text: 'The website and its services are provided "as is," without warranties of any kind, express or implied. Rekal shall not be liable for any indirect, incidental, or consequential damages arising from your use of the website. In all cases, Rekal\'s total liability to you shall not exceed the amount you actually paid during the three months preceding the incident giving rise to the claim.'
       },
       { type: 'h2', text: '6. Governing Law and Jurisdiction' },
       {
@@ -145,7 +145,7 @@ export const paymentRefundPolicyContent: Record<'ar' | 'en', PolicyContent> = {
       },
       { type: 'h2', text: '8. Contact Us' },
       { type: 'p', text: 'For any questions about payment or your subscription, you can reach us at:' },
-      { type: 'ul', items: ['📧 [Support Email]', '🌐 [Website URL]'] },
+      { type: 'ul', items: ['📧 amr.k.qaid@gmail.com'] },
     ],
   },
 };

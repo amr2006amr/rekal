@@ -5,17 +5,17 @@ import { PolicyBlock, PolicyContent } from './privacy-policy';
 
 export const usageGuidelinesContent: Record<'ar' | 'en', PolicyContent> = {
   ar: {
-    title: 'دليل استخدام ركال (Rekal)',
+    title: 'دليل استخدام رِكال (Rekal)',
     lastUpdated: '',
     blocks: [
       {
         type: 'p',
-        text: 'مرحبًا فيك في ركال! هذا الدليل يشرح لك فكرة الموقع وكيف تستفيد منه أقصى استفادة.',
+        text: 'مرحبًا فيك في رِكال! هذا الدليل يشرح لك فكرة الموقع وكيف تستفيد منه أقصى استفادة.',
       },
-      { type: 'h2', text: '١. ما هو ركال، ولأي مشكلة يحلها؟' },
+      { type: 'h2', text: '١. ما هو رِكال، ولأي مشكلة يحلها؟' },
       {
         type: 'p',
-        text: 'تطبيقات حفظ المفردات التقليدية (زي Anki أو Quizlet) قوية، لكنها غالبًا معقّدة الإعداد، بواجهة بلغة واحدة، وما تراعي مستواك الحقيقي أو تعطيك نطق الكلمة وأمثلة عملية عليها. ركال صُمم ليجمع أفضل ما فيها بحزمة أبسط:',
+        text: 'تطبيقات حفظ المفردات التقليدية قوية، لكنها غالبًا معقّدة الإعداد، بواجهة بلغة واحدة، وما تراعي مستواك الحقيقي أو تعطيك نطق الكلمة وأمثلة عملية عليها. رِكال صُمم ليجمع أفضل ما فيها بحزمة أبسط:',
       },
       {
         type: 'ul',
@@ -33,7 +33,7 @@ export const usageGuidelinesContent: Record<'ar' | 'en', PolicyContent> = {
       { type: 'h2', text: '٢. فكرة التكرار المتباعد (Spaced Repetition)' },
       {
         type: 'p',
-        text: 'يعتمد ركال على خوارزمية علمية تُسمى SM-2، وفكرتها بسيطة:',
+        text: 'يعتمد رِكال على خوارزمية علمية تُسمى SM-2، وفكرتها بسيطة:',
       },
       {
         type: 'ul',
@@ -50,14 +50,14 @@ export const usageGuidelinesContent: Record<'ar' | 'en', PolicyContent> = {
       { type: 'h2', text: '٣. مستويات CEFR' },
       {
         type: 'p',
-        text: 'يوفر ركال 5 مستويات لغوية حسب المعيار الأوروبي المرجعي المشترك للغات (CEFR): A1 → A2 → B1 → B2 → C1.',
+        text: 'يوفر رِكال 5 مستويات لغوية حسب المعيار الأوروبي المرجعي المشترك للغات (CEFR): A1 → A2 → B1 → B2 → C1.',
       },
       {
         type: 'p',
         text: 'عند إنشاء حسابك (أو من الإعدادات لاحقًا)، تختار المستوى اللي يناسب مستواك الحالي بالإنجليزي. لو ما متأكد من مستواك بالضبط، اختار المستوى اللي تحس إنه أقرب لمستوى مفرداتك الحالي — تقدر تغيّره لاحقًا بأي وقت من الإعدادات.',
       },
       { type: 'h2', text: '٤. كيف يختار الموقع الكلمات الجديدة لك' },
-      { type: 'p', text: 'الكلمات الجديدة اللي يعرضها عليك ركال ما تكون عشوائية بالكامل:' },
+      { type: 'p', text: 'الكلمات الجديدة اللي يعرضها عليك رِكال ما تكون عشوائية بالكامل:' },
       {
         type: 'ul',
         items: [
@@ -78,7 +78,7 @@ export const usageGuidelinesContent: Record<'ar' | 'en', PolicyContent> = {
         type: 'p',
         text: 'لو وصلت للحد اليومي بالخطة المجانية، بتحتاج تنتظر لليوم التالي أو تشترك بخطة PRO عشان تكمل المراجعة بدون حدود.',
       },
-      { type: 'h2', text: '٦. نصائح للاستفادة القصوى من ركال' },
+      { type: 'h2', text: '٦. نصائح للاستفادة القصوى من رِكال' },
       {
         type: 'ul',
         items: [
@@ -104,7 +104,7 @@ export const usageGuidelinesContent: Record<'ar' | 'en', PolicyContent> = {
       },
       {
         type: 'p',
-        text: 'لأي استفسار أو مساعدة إضافية، تواصل معنا عبر [البريد الإلكتروني للدعم].',
+        text: 'لأي استفسار أو مساعدة إضافية، تواصل معنا عبر amr.k.qaid@gmail.com.',
       },
     ],
   },
@@ -208,7 +208,7 @@ export const usageGuidelinesContent: Record<'ar' | 'en', PolicyContent> = {
       },
       {
         type: 'p',
-        text: 'For any questions or additional help, contact us at [Support Email].',
+        text: 'For any questions or additional help, contact us at amr.k.qaid@gmail.com.',
       },
     ],
   },

@@ -17,17 +17,17 @@ export interface PolicyContent {
 
 export const privacyPolicyContent: Record<'ar' | 'en', PolicyContent> = {
   ar: {
-    title: 'سياسة الخصوصية — ركال (Rekal)',
-    lastUpdated: 'آخر تحديث: [التاريخ]',
+    title: 'سياسة الخصوصية — رِكال (Rekal)',
+    lastUpdated: 'آخر تحديث: سبتمبر 2026',
     blocks: [
       {
         type: 'p',
-        text: 'مرحبًا بك في ركال (Rekal). نحن نولي حماية خصوصيتك أهمية كبيرة، وتوضح هذه السياسة البيانات التي نجمعها عنك، وأسباب جمعها، وكيفية حمايتها، وحقوقك المتعلقة بها.',
+        text: 'مرحبًا بك في رِكال (Rekal). نحن نولي حماية خصوصيتك أهمية كبيرة، وتوضح هذه السياسة البيانات التي نجمعها عنك، وأسباب جمعها، وكيفية حمايتها، وحقوقك المتعلقة بها.',
       },
       { type: 'h2', text: '١. البيانات التي نجمعها' },
       {
         type: 'p',
-        text: 'عند استخدامك لموقع [اسم الشركة]، قد نجمع الأنواع التالية من البيانات:',
+        text: 'عند استخدامك لموقع رِكال (Rekal)، قد نجمع الأنواع التالية من البيانات:',
       },
       {
         type: 'ul',
@@ -88,7 +88,7 @@ export const privacyPolicyContent: Record<'ar' | 'en', PolicyContent> = {
       },
       {
         type: 'p',
-        text: 'لممارسة أي من هذه الحقوق، يُرجى التواصل معنا عبر [البريد الإلكتروني للدعم].',
+        text: 'لممارسة أي من هذه الحقوق، يُرجى التواصل معنا عبر amr.k.qaid@gmail.com.',
       },
       { type: 'h2', text: '٦. الاحتفاظ بالبيانات' },
       {
@@ -105,7 +105,7 @@ export const privacyPolicyContent: Record<'ar' | 'en', PolicyContent> = {
         type: 'p',
         text: 'لأي استفسار يتعلق بهذه السياسة أو ببياناتك، يمكنك التواصل معنا عبر:',
       },
-      { type: 'ul', items: ['📧 [البريد الإلكتروني للدعم]', '🌐 [رابط الموقع]'] },
+      { type: 'ul', items: ['📧 amr.k.qaid@gmail.com'] },
     ],
   },
   en: {
@@ -119,7 +119,7 @@ export const privacyPolicyContent: Record<'ar' | 'en', PolicyContent> = {
       { type: 'h2', text: '1. Data We Collect' },
       {
         type: 'p',
-        text: 'When you use the [Company Name] website, we may collect the following types of data:',
+        text: 'When you use the Rekal website, we may collect the following types of data:',
       },
       {
         type: 'ul',
@@ -180,7 +180,7 @@ export const privacyPolicyContent: Record<'ar' | 'en', PolicyContent> = {
       },
       {
         type: 'p',
-        text: 'To exercise any of these rights, please contact us at [Support Email].',
+        text: 'To exercise any of these rights, please contact us at amr.k.qaid@gmail.com.',
       },
       { type: 'h2', text: '6. Data Retention' },
       {
@@ -197,7 +197,7 @@ export const privacyPolicyContent: Record<'ar' | 'en', PolicyContent> = {
         type: 'p',
         text: 'For any questions about this policy or your data, you can reach us at:',
       },
-      { type: 'ul', items: ['📧 [Support Email]', '🌐 [Website URL]'] },
+      { type: 'ul', items: ['📧 amr.k.qaid@gmail.com'] },
     ],
   },
 };
