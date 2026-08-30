@@ -1,7 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { supabase, createAuthedClient } from '@/lib/supabase/client';
-import { getUserSettings, getUserProgressForWord, recordReviewInDB } from '@/lib/services/supabaseService';
-import { DAILY_FREE_LIMIT } from '@/lib/storage';
 
 export const dynamic = 'force-dynamic';
 
@@ -40,50 +38,38 @@ export async function POST(request: NextRequest) {
     // A client scoped to THIS user's token, so Row Level Security evaluates
     // the request as coming from them (auth.uid() = user.id) instead of the
     // anonymous role — same effective access as the browser's own session.
+    // It's also what makes auth.uid() resolve correctly *inside* the
+    // record_review() Postgres function below.
     const authedClient = createAuthedClient(token);
 
-    // Always re-read settings fresh from the database — this is the actual
-    // enforcement point: subscription_status and daily_reviews_used here
-    // can only be what's really stored for this user, never a value the
-    // client claims. This function also applies the midnight daily reset
-    // if needed.
-    //
-    // We fetch this word's existing progress in the same breath. Never
-    // trust SM2 scheduling state (ease factor, interval, etc.) sent from
-    // the client, since a forged "brand new word" state could be used to
-    // manipulate the review queue or the daily count indirectly.
-    //
-    // These two reads are independent of each other (settings vs. a single
-    // progress row), so they run concurrently with Promise.all instead of
-    // one waiting on the other — this halves the network round-trip time
-    // spent on reads before we can even check the daily limit. The
-    // progress lookup is also a targeted (user_id, word_id) query rather
-    // than pulling the user's entire review history — see
-    // getUserProgressForWord's doc comment — so latency here stays
-    // constant regardless of how many words the user has reviewed in total.
-    const [settings, currentProgress] = await Promise.all([
-      getUserSettings(user.id, authedClient),
-      getUserProgressForWord(user.id, wordId, authedClient),
-    ]);
+    // Everything that used to be 3 sequential round trips to Supabase
+    // (getUserSettings -> getUserProgressForWord -> upsert + saveSettings)
+    // now happens in ONE round trip: the daily-reset check, the daily-limit
+    // enforcement, the SM2 calculation, the progress upsert, and the
+    // counter increment all run together inside record_review(), in a
+    // single Postgres transaction. See record_review.sql for the full
+    // logic (it's a line-by-line port of calculateNextReview() and
+    // recordReviewInDB() — nothing about the scheduling math or the
+    // free-tier limit rule changed, only where it executes).
+    const { data, error: rpcError } = await authedClient.rpc('record_review', {
+      p_user_id: user.id,
+      p_word_id: wordId,
+      p_rating: rating,
+    });
 
-    const isPro = settings.subscription_status === 'active';
-    if (!isPro && (settings.daily_reviews_used || 0) >= DAILY_FREE_LIMIT) {
+    if (rpcError) {
+      console.error('record_review RPC error:', rpcError);
+      return NextResponse.json({ error: 'Failed to record review' }, { status: 500 });
+    }
+
+    if (data?.error === 'daily_limit_reached') {
       return NextResponse.json(
-        { error: 'daily_limit_reached', limit: DAILY_FREE_LIMIT },
+        { error: 'daily_limit_reached', limit: data.limit },
         { status: 403 }
       );
     }
 
-    const result = await recordReviewInDB(
-      user.id,
-      wordId,
-      rating as any,
-      currentProgress,
-      settings,
-      authedClient
-    );
-
-    return NextResponse.json(result);
+    return NextResponse.json({ progress: data.progress, settings: data.settings });
   } catch (err: any) {
     console.error('Error in /api/review:', err);
     return NextResponse.json({ error: 'Failed to record review' }, { status: 500 });
