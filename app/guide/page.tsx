@@ -1,11 +1,26 @@
-'use client';
+import type { Metadata } from 'next';
+import GuideClient from '@/components/GuideClient';
 
-import React from 'react';
-import { useLanguage } from '@/lib/i18n/LanguageContext';
-import { usageGuidelinesContent } from '@/lib/legal/usage-guidelines';
-import PolicyPage from '@/components/PolicyPage';
+const BASE_URL = process.env.NEXT_PUBLIC_APP_URL || 'https://rekal.app';
 
-export default function GuidePage() {
-  const { locale } = useLanguage();
-  return <PolicyPage content={usageGuidelinesContent[locale]} />;
+export const metadata: Metadata = {
+  title: 'كيف يعمل رِكال؟ دليل حفظ المفردات بالتكرار المتباعد',
+  description:
+    'تعرّف على طريقة عمل رِكال: خوارزمية SM-2 للتكرار المتباعد، مستويات CEFR الخمسة، ونصائح عملية لحفظ مفردات إنجليزية جديدة بفعالية أكبر.',
+  alternates: {
+    canonical: `${BASE_URL}/guide`,
+  },
+  openGraph: {
+    title: 'كيف يعمل رِكال؟ دليل حفظ المفردات بالتكرار المتباعد',
+    description:
+      'خوارزمية SM-2 للتكرار المتباعد، مستويات CEFR، ونصائح عملية لحفظ مفردات إنجليزية جديدة.',
+    url: `${BASE_URL}/guide`,
+    siteName: 'Rekal',
+    locale: 'ar',
+    type: 'article',
+  },
+};
+
+export default function Page() {
+  return <GuideClient />;
 }
