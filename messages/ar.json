@@ -131,15 +131,35 @@
     "payment_policy_link": "سياسة الدفع والاسترجاع"
   }, 
   "footer": {
-  "important_links_title": "روابط مهمة",
-  "home": "الرئيسية",
-  "guide": "إرشادات الاستخدام",
-  "settings": "الإعدادات",
-  "subscription": "الاشتراك",
-  "contact_support_title": "الاتصال والدعم",
-  "privacy_policy": "سياسة الخصوصية",
-  "payment_policy": "سياسة الدفع",
-  "contact_us": "تواصل معنا",
-  "rights_reserved": "جميع الحقوق محفوظة لرِكال © {year}"
-}
+    "important_links_title": "روابط مهمة",
+    "home": "الرئيسية",
+    "guide": "إرشادات الاستخدام",
+    "settings": "الإعدادات",
+    "subscription": "الاشتراك",
+    "contact_support_title": "الاتصال والدعم",
+    "privacy_policy": "سياسة الخصوصية",
+    "payment_policy": "سياسة الدفع",
+    "contact_us": "تواصل معنا",
+    "rights_reserved": "جميع الحقوق محفوظة لرِكال © {year}"
+  },
+  "chat": {
+    "widget_title": "رِكال AI",
+    "bot_name": "رِكال",
+    "status_online": "مساعد المفردات",
+    "remaining_today": "متبقي اليوم: {remaining} من {limit}",
+    "pro_badge": "PRO ⚡ وصول يومي ضخم",
+    "upgrade_prompt": "اشترك للحصول على رسائل يومية ضخمة ⚡",
+    "welcome_static_message": "أهلاً بك 👋 أنا رِكال، مساعدك لأي سؤال يتعلق باللغة الإنجليزية — اسألني عن معنى كلمة، الفرق بين كلمتين متشابهتين، أو أمثلة إضافية.",
+    "login_required_desc": "سجّل دخولك عشان تقدر تستخدم رِكال AI",
+    "login_button": "تسجيل الدخول",
+    "input_placeholder": "اسأل رِكال عن أي كلمة إنجليزية...",
+    "send": "إرسال",
+    "limit_reached_title": "وصلت للحد اليومي للرسائل",
+    "limit_reached_desc": "استهلكت رصيدك اليومي ({limit} رسائل). يمكنك الترقية إلى PRO للحصول على وصول يومي سخي.",
+    "upgrade_button": "ترقية إلى PRO",
+    "error_generic": "عذراً، حدث خطأ أثناء الاتصال. يرجى المحاولة لاحقاً.",
+    "error_unauthorized": "يرجى تسجيل الدخول لاستخدام المساعد الذكي.",
+    "close": "إغلاق نافذة المحادثة",
+    "open": "فتح مساعد رِكال"
+  }
 }

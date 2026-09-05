@@ -5,6 +5,7 @@ import { LanguageProvider } from '@/lib/i18n/LanguageContext';
 import { AuthProvider } from '@/lib/auth/AuthContext';
 import { Navbar } from '@/components/Navbar';
 import ConditionalFooter from '@/components/ConditionalFooter';
+import ChatWidget from '@/components/ChatWidget';
 
 export const metadata: Metadata = {
   title: 'رِكال (Rekal) — تطبيق مراجعة المفردات بالتكرار المتباعد',
@@ -32,6 +33,7 @@ export default function RootLayout({
               {children}
             </main>
             <ConditionalFooter />
+            <ChatWidget />
           </AuthProvider>
         </LanguageProvider>
 

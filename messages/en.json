@@ -131,15 +131,35 @@
     "payment_policy_link": "Payment & Refund Policy"
   },
   "footer": {
-  "important_links_title": "Important Links",
-  "home": "Home",
-  "guide": "Usage Guidelines",
-  "settings": "Settings",
-  "subscription": "Subscription",
-  "contact_support_title": "Contact & Support",
-  "privacy_policy": "Privacy Policy",
-  "payment_policy": "Payment Policy",
-  "contact_us": "Contact Us",
-  "rights_reserved": "All rights reserved to Rekal © {year}"
-}
+    "important_links_title": "Important Links",
+    "home": "Home",
+    "guide": "Usage Guidelines",
+    "settings": "Settings",
+    "subscription": "Subscription",
+    "contact_support_title": "Contact & Support",
+    "privacy_policy": "Privacy Policy",
+    "payment_policy": "Payment Policy",
+    "contact_us": "Contact Us",
+    "rights_reserved": "All rights reserved to Rekal © {year}"
+  },
+  "chat": {
+    "widget_title": "Rekal AI",
+    "bot_name": "Rekal",
+    "status_online": "Vocabulary Assistant",
+    "remaining_today": "Remaining today: {remaining} of {limit}",
+    "pro_badge": "PRO ⚡ Generous daily access",
+    "upgrade_prompt": "Subscribe for generous daily messages ⚡",
+    "welcome_static_message": "Welcome 👋 I am Rekal, your assistant for any English language questions — ask me about a word's meaning, the difference between similar words, or additional examples.",
+    "login_required_desc": "Please log in to use Rekal AI",
+    "login_button": "Log in",
+    "input_placeholder": "Ask Rekal about any English word...",
+    "send": "Send",
+    "limit_reached_title": "Daily Message Limit Reached",
+    "limit_reached_desc": "You have used your daily quota ({limit} messages). Upgrade to PRO for generous daily access.",
+    "upgrade_button": "Upgrade to PRO",
+    "error_generic": "Sorry, an error occurred. Please try again later.",
+    "error_unauthorized": "Please log in to use the AI assistant.",
+    "close": "Close chat window",
+    "open": "Open Rekal assistant"
+  }
 }

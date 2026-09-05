@@ -39,3 +39,17 @@ export interface UserSettings {
 }
 
 export type Locale = 'ar' | 'en';
+
+export interface ChatMessage {
+  id: string;
+  role: 'user' | 'assistant';
+  content: string;
+  createdAt: string;
+}
+
+export interface ChatUsageInfo {
+  messages_used_today: number;
+  daily_limit: number;
+  remaining: number;
+  is_pro: boolean;
+}

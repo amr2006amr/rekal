@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import GuideClient from '@/components/GuideClient';
 
-const BASE_URL = process.env.NEXT_PUBLIC_APP_URL || 'https://rekal.app';
+const BASE_URL = process.env.NEXT_PUBLIC_APP_URL || 'https://rekal.online';
 
 export const metadata: Metadata = {
   title: 'كيف يعمل رِكال؟ دليل حفظ المفردات بالتكرار المتباعد',
