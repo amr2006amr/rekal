@@ -70,7 +70,7 @@ export const usageGuidelinesContent: Record<'ar' | 'en', PolicyContent> = {
       {
         type: 'ul',
         items: [
-          'الخطة المجانية: حتى 50 مراجعة كلمة/يوم.',
+          'الخطة المجانية: حتى 30 مراجعة كلمة/يوم.',
           'خطة PRO: عدد مراجعات غير محدود.',
         ],
       },
@@ -78,7 +78,21 @@ export const usageGuidelinesContent: Record<'ar' | 'en', PolicyContent> = {
         type: 'p',
         text: 'لو وصلت للحد اليومي بالخطة المجانية، بتحتاج تنتظر لليوم التالي أو تشترك بخطة PRO عشان تكمل المراجعة بدون حدود.',
       },
-      { type: 'h2', text: '٦. نصائح للاستفادة القصوى من رِكال' },
+      { type: 'h2', text: '٦. رِكال AI — مساعدك الذكي' },
+      {
+        type: 'p',
+        text: 'رِكال AI بوت ذكاء اصطناعي مدمج بالموقع (يظهر كأيقونة عائمة بكل الصفحات) يجاوب على أي سؤال متعلق بفهم مفردات إنجليزية: شرح المعنى بعمق أكبر، الفرق بين معاني متعددة لنفس الكلمة، وأمثلة إضافية.',
+      },
+      {
+        type: 'ul',
+        items: [
+          'يجاوب بالعربية إذا سألته بالعربية، وبالإنجليزية إذا سألته بالإنجليزية.',
+          'الخطة المجانية: 7 رسائل يوميًا.',
+          'خطة PRO: عدد رسائل يومي سخي جدًا.',
+          'النسخة الحالية نصية فقط (بدون دعم صوتي بعد).',
+        ],
+      },
+      { type: 'h2', text: '٧. نصائح للاستفادة القصوى من رِكال' },
       {
         type: 'ul',
         items: [
@@ -89,7 +103,7 @@ export const usageGuidelinesContent: Record<'ar' | 'en', PolicyContent> = {
           'تابع تقدمك من لوحة التحكم/الإحصائيات بحسابك، عشان تشوف كم كلمة ثبّتها فعليًا وكم باقي عليك.',
         ],
       },
-      { type: 'h2', text: '٧. إعادة ضبط البيانات' },
+      { type: 'h2', text: '٨. إعادة ضبط البيانات' },
       {
         type: 'p',
         text: 'بإعدادات حسابك، تلقى خيار "إعادة ضبط البيانات". هذا الخيار يمسح سجل تقدمك التعليمي بالكامل (تواريخ المراجعة، تقييماتك السابقة) ويرجّعك تبدأ من الصفر.',
@@ -174,7 +188,7 @@ export const usageGuidelinesContent: Record<'ar' | 'en', PolicyContent> = {
       {
         type: 'ul',
         items: [
-          'Free plan: up to 50 word reviews/day.',
+          'Free plan: up to 30 word reviews/day.',
           'PRO plan: unlimited reviews.',
         ],
       },
@@ -182,7 +196,21 @@ export const usageGuidelinesContent: Record<'ar' | 'en', PolicyContent> = {
         type: 'p',
         text: "If you hit the daily limit on the free plan, you'll need to wait until the next day or subscribe to the PRO plan to keep reviewing without limits.",
       },
-      { type: 'h2', text: '6. Tips to Get the Most Out of Rekal' },
+      { type: 'h2', text: '6. Rekal AI — Your Smart Assistant' },
+      {
+        type: 'p',
+        text: 'Rekal AI is a built-in AI chatbot (appearing as a floating icon on every page) that answers any question related to understanding English vocabulary: deeper meaning explanations, differences between multiple meanings of the same word, and additional examples.',
+      },
+      {
+        type: 'ul',
+        items: [
+          'It responds in Arabic if you ask in Arabic, and in English if you ask in English.',
+          'Free plan: 7 messages per day.',
+          'PRO plan: a very generous daily message allowance.',
+          'The current version is text-only (no voice support yet).',
+        ],
+      },
+      { type: 'h2', text: '7. Tips to Get the Most Out of Rekal' },
       {
         type: 'ul',
         items: [
@@ -193,7 +221,7 @@ export const usageGuidelinesContent: Record<'ar' | 'en', PolicyContent> = {
           "Track your progress from your account's dashboard/stats page to see how many words you've truly mastered and how many are left.",
         ],
       },
-      { type: 'h2', text: '7. Resetting Your Data' },
+      { type: 'h2', text: '8. Resetting Your Data' },
       {
         type: 'p',
         text: 'In your account settings, you\'ll find a "Reset Data" option. This completely erases your learning progress history (review dates, past ratings) and starts you from scratch.',

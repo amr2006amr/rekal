@@ -1,4 +1,5 @@
 import { MetadataRoute } from 'next';
+import { getAllWords } from '@/lib/data/words';
 
 const BASE_URL = process.env.NEXT_PUBLIC_APP_URL || 'https://rekal.online';
 
@@ -10,7 +11,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   // auth callback) are deliberately excluded — there's nothing for a
   // search engine to index there, and indexing them would just waste
   // crawl budget on pages Google can't meaningfully rank anyway.
-  return [
+  const staticRoutes: MetadataRoute.Sitemap = [
     {
       url: BASE_URL,
       lastModified: now,
@@ -42,4 +43,13 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.3,
     },
   ];
+
+  const wordRoutes: MetadataRoute.Sitemap = getAllWords().map((word) => ({
+    url: `${BASE_URL}/word/${word.id}`,
+    lastModified: now,
+    changeFrequency: 'monthly',
+    priority: 0.6,
+  }));
+
+  return [...staticRoutes, ...wordRoutes];
 }

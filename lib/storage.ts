@@ -10,7 +10,7 @@ import {
 } from './services/supabaseService';
 import { supabase, isSupabaseConfigured } from './supabase/client';
 
-export const DAILY_FREE_LIMIT = 50;
+export const DAILY_FREE_LIMIT = 30;
 
 const SETTINGS_KEY = 'rekal_user_settings';
 const PROGRESS_KEY = 'rekal_user_progress';

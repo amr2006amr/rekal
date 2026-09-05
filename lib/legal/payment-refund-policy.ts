@@ -20,8 +20,8 @@ export const paymentRefundPolicyContent: Record<'ar' | 'en', PolicyContent> = {
       {
         type: 'ul',
         items: [
-          'الخطة المجانية: حد أقصى 50 مراجعة كلمة يوميًا.',
-          'خطة PRO: عدد غير محدود من المراجعات اليومية.',
+          'الخطة المجانية: حد أقصى 30 مراجعة كلمة يوميًا.',
+          'خطة PRO: عدد غير محدود من المراجعات اليومية، بالإضافة إلى وصول يومي أوسع لميزة رِكال AI (المساعد الذكي).',
         ],
       },
       { type: 'h2', text: '٢. من يعالج الدفع' },
@@ -43,7 +43,7 @@ export const paymentRefundPolicyContent: Record<'ar' | 'en', PolicyContent> = {
         type: 'ul',
         items: [
           'يستمر وصولك الكامل (غير المحدود) لمزايا خطة PRO فعالاً حتى نهاية الفترة المدفوعة التي دفعتها بالفعل.',
-          'بعد انتهاء تلك الفترة، يعود حسابك تلقائيًا إلى حدود الخطة المجانية (50 مراجعة/يوم).',
+          'بعد انتهاء تلك الفترة، يعود حسابك تلقائيًا إلى حدود الخطة المجانية (30 مراجعة/يوم).',
           'لا يوجد استرجاع جزئي عن الأيام المتبقية من الفترة المدفوعة في حال الإلغاء المبكر، ما لم يُذكر خلاف ذلك صراحةً.',
         ],
       },
@@ -92,8 +92,8 @@ export const paymentRefundPolicyContent: Record<'ar' | 'en', PolicyContent> = {
       {
         type: 'ul',
         items: [
-          'Free plan: capped at 50 word reviews per day.',
-          'PRO plan: unlimited daily reviews.',
+          'Free plan: capped at 30 word reviews per day.',
+          'PRO plan: unlimited daily reviews, plus broader daily access to the Rekal AI smart assistant.',
         ],
       },
       { type: 'h2', text: '2. Who Processes Payment' },
@@ -115,7 +115,7 @@ export const paymentRefundPolicyContent: Record<'ar' | 'en', PolicyContent> = {
         type: 'ul',
         items: [
           'Your full (unlimited) access to PRO features remains active until the end of the paid period you have already paid for.',
-          "After that period ends, your account automatically reverts to the free plan's limits (50 reviews/day).",
+          "After that period ends, your account automatically reverts to the free plan's limits (30 reviews/day).",
           'No partial refund is issued for the remaining days of the paid period in the case of early cancellation, unless explicitly stated otherwise.',
         ],
       },

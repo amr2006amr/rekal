@@ -8,7 +8,7 @@ This policy explains the details of the paid subscription on the [Company Name] 
 
 The PRO plan subscription is a **monthly, auto-renewing** subscription priced at **$5 USD/month**, unless clearly stated otherwise at checkout. The subscription renews automatically at the end of each monthly cycle unless canceled before the renewal date.
 
-- **Free plan**: capped at 50 word reviews per day.
+- **Free plan**: capped at 30 word reviews per day.
 - **PRO plan**: unlimited daily reviews.
 
 ## 2. Who Processes Payment
@@ -24,7 +24,7 @@ All payments are processed entirely through **Lemon Squeezy**, which acts as the
 You may cancel auto-renewal of your subscription at any time. Upon cancellation:
 
 - Your full (unlimited) access to PRO features remains active until the **end of the paid period** you have already paid for.
-- After that period ends, your account automatically reverts to the free plan's limits (50 reviews/day).
+- After that period ends, your account automatically reverts to the free plan's limits (30 reviews/day).
 - **No partial refund** is issued for the remaining days of the paid period in the case of early cancellation, unless explicitly stated otherwise.
 
 ## 4. Refund Policy

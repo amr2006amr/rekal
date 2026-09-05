@@ -45,7 +45,7 @@ The new words Rekal shows you aren't fully random:
 
 | | Free Plan | PRO Plan |
 |---|---|---|
-| Daily reviews | Up to 50 reviews/day | Unlimited |
+| Daily reviews | Up to 30 reviews/day | Unlimited |
 
 If you hit the daily limit on the free plan, you'll need to wait until the next day or subscribe to the PRO plan to keep reviewing without limits.
 

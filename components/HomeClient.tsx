@@ -110,8 +110,8 @@ export default function HomeClient() {
           </h4>
           <p className="text-xs text-slate-300">
             {locale === 'ar'
-              ? 'تجاوز حد الـ50 مراجعة يومية وراجع بلا قيود مقابل $5 فقط شهرياً.'
-              : 'Break past the 50-review daily limit — unlimited reviews for just $5/month.'}
+              ? 'تجاوز حد الـ30 مراجعة يومية وراجع بلا قيود مقابل $5 فقط شهرياً.'
+              : 'Break past the 30-review daily limit — unlimited reviews for just $5/month.'}
           </p>
         </div>
 
