@@ -30,6 +30,23 @@ export function getWordById(id: string): WordItem | undefined {
 }
 
 /**
+ * Search static dictionary for an exact word match (case-insensitive and trimmed).
+ */
+export function findStaticWord(wordInput: string): WordItem | undefined {
+  if (!wordInput) return undefined;
+  const normalized = wordInput.trim().toLowerCase();
+  return getAllWords().find((w) => {
+    const wNormalized = w.word.trim().toLowerCase();
+    if (wNormalized === normalized) return true;
+    if (wNormalized.includes(',')) {
+      const parts = wNormalized.split(',').map((s) => s.trim());
+      if (parts.includes(normalized)) return true;
+    }
+    return false;
+  });
+}
+
+/**
  * Get words suitable for a user's selected level:
  * Primarily their current level, plus lower levels for reinforcement.
  */

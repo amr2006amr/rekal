@@ -36,6 +36,11 @@ export interface UserSettings {
   daily_reviews_used: number;
   daily_reset_at: string;
   subscription_status: 'free' | 'active';
+  // Optional: only populated for signed-in users (calculated server-side
+  // inside record_review()). Guest/local settings won't have these, so
+  // every read site must fall back with ?? 0 / ?? null.
+  current_streak?: number;
+  last_streak_date?: string | null;
 }
 
 export type Locale = 'ar' | 'en';
@@ -52,4 +57,21 @@ export interface ChatUsageInfo {
   daily_limit: number;
   remaining: number;
   is_pro: boolean;
+}
+
+export interface CustomWordItem extends WordItem {
+  user_id: string;
+  created_at?: string;
+  updated_at?: string;
+}
+
+export interface CustomWordUsageInfo {
+  is_pro: boolean;
+  daily_attempts: number;
+  attempts_limit: number;
+  attempts_remaining: number;
+  quota_used: number;
+  quota_limit: number;
+  quota_remaining: number;
+  allowed: boolean;
 }

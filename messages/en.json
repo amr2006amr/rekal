@@ -104,7 +104,10 @@
     "status_due": "Due Now",
     "status_scheduled": "Scheduled",
     "reviewed_count_label": "Words Reviewed",
-    "empty_reviewed": "You haven't reviewed any words yet. Start a review session to see them here."
+    "empty_reviewed": "You haven't reviewed any words yet. Start a review session to see them here.",
+    "streak_label": "day streak",
+    "streak_title": "Keep it up! Review daily to maintain your streak",
+    "streak_start": "Review today to start your first streak 🔥"
   },
   "settings": {
     "title": "Settings",

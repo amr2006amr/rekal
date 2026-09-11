@@ -81,7 +81,7 @@ export const usageGuidelinesContent: Record<'ar' | 'en', PolicyContent> = {
       { type: 'h2', text: '٦. رِكال AI — مساعدك الذكي' },
       {
         type: 'p',
-        text: 'رِكال AI بوت ذكاء اصطناعي مدمج بالموقع (يظهر كأيقونة عائمة بكل الصفحات) يجاوب على أي سؤال متعلق بفهم مفردات إنجليزية: شرح المعنى بعمق أكبر، الفرق بين معاني متعددة لنفس الكلمة، وأمثلة إضافية.',
+        text: 'رِكال AI بوت ذكاء اصطناعي مدمج بالموقع يجاوب على أي سؤال متعلق بفهم مفردات إنجليزية: شرح المعنى بعمق أكبر، الفرق بين معاني متعددة لنفس الكلمة، وأمثلة إضافية.',
       },
       {
         type: 'ul',
@@ -89,7 +89,6 @@ export const usageGuidelinesContent: Record<'ar' | 'en', PolicyContent> = {
           'يجاوب بالعربية إذا سألته بالعربية، وبالإنجليزية إذا سألته بالإنجليزية.',
           'الخطة المجانية: 7 رسائل يوميًا.',
           'خطة PRO: عدد رسائل يومي سخي جدًا.',
-          'النسخة الحالية نصية فقط (بدون دعم صوتي بعد).',
         ],
       },
       { type: 'h2', text: '٧. نصائح للاستفادة القصوى من رِكال' },
@@ -199,7 +198,7 @@ export const usageGuidelinesContent: Record<'ar' | 'en', PolicyContent> = {
       { type: 'h2', text: '6. Rekal AI — Your Smart Assistant' },
       {
         type: 'p',
-        text: 'Rekal AI is a built-in AI chatbot (appearing as a floating icon on every page) that answers any question related to understanding English vocabulary: deeper meaning explanations, differences between multiple meanings of the same word, and additional examples.',
+        text: 'Rekal AI is a built-in AI chatbot that answers any question related to understanding English vocabulary: deeper meaning explanations, differences between multiple meanings of the same word, and additional examples.',
       },
       {
         type: 'ul',
@@ -207,7 +206,6 @@ export const usageGuidelinesContent: Record<'ar' | 'en', PolicyContent> = {
           'It responds in Arabic if you ask in Arabic, and in English if you ask in English.',
           'Free plan: 7 messages per day.',
           'PRO plan: a very generous daily message allowance.',
-          'The current version is text-only (no voice support yet).',
         ],
       },
       { type: 'h2', text: '7. Tips to Get the Most Out of Rekal' },

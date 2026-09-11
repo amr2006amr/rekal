@@ -66,6 +66,10 @@ export default function DashboardPage() {
 
   const isPro = settings.subscription_status === 'active';
 
+  // Streak is only ever populated for signed-in users (calculated
+  // server-side by record_review()) — guests simply won't have it.
+  const streak = settings.current_streak ?? 0;
+
   return (
     <div className="space-y-8 py-4 sm:py-6">
       {/* Header & Quick Action */}
@@ -113,6 +117,30 @@ export default function DashboardPage() {
           </Link>
         </div>
       </div>
+
+      {/* Streak Banner — only shown for signed-in users. A dedicated,
+          visually distinct spotlight (not just another grid stat), since
+          it's meant to feel like an achievement, not a raw metric. */}
+      {user && (
+        <div className="relative overflow-hidden bg-gradient-to-l from-amber-500 via-orange-500 to-amber-600 rounded-3xl p-6 shadow-lg shadow-orange-500/20 flex items-center justify-between gap-4">
+          <div className="flex items-center gap-4">
+            <div className="w-14 h-14 rounded-2xl bg-white/20 backdrop-blur-sm flex items-center justify-center shrink-0">
+              <Flame size={30} className="text-white fill-white/30" />
+            </div>
+            <div>
+              <div className="flex items-baseline gap-1.5">
+                <span className="text-3xl sm:text-4xl font-black text-white">{streak}</span>
+                <span className="text-sm font-bold text-white/90">
+                  {t('dashboard.streak_label')}
+                </span>
+              </div>
+              <p className="text-xs text-white/80 font-medium">
+                {streak > 0 ? t('dashboard.streak_title') : t('dashboard.streak_start')}
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* 4 Stat Cards */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">

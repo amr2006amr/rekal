@@ -1,5 +1,5 @@
 import { SupabaseClient } from '@supabase/supabase-js';
-import { CEFRLevel, ReviewRating, UserProgress, UserSettings } from '@/types';
+import { CEFRLevel, ReviewRating, UserProgress, UserSettings, CustomWordItem } from '@/types';
 import { supabase, isSupabaseConfigured } from '@/lib/supabase/client';
 import { calculateNextReview } from '@/lib/spaced-repetition';
 
@@ -321,5 +321,204 @@ export async function resetUserDataInDB(
     await client.from('user_progress').delete().eq('user_id', userId);
   } catch (err) {
     console.error('Failed to reset user data in Supabase:', err);
+  }
+}
+
+/**
+ * Fetch all custom words for a specific user from user_custom_words.
+ */
+export async function getUserCustomWords(
+  userId: string,
+  client: SupabaseClient = supabase
+): Promise<CustomWordItem[]> {
+  if (!isSupabaseConfigured()) return [];
+
+  try {
+    const { data, error } = await client
+      .from('user_custom_words')
+      .select('*')
+      .eq('user_id', userId)
+      .order('created_at', { ascending: false });
+
+    if (error) {
+      console.error('Error fetching user_custom_words:', error);
+      return [];
+    }
+
+    return (data || []).map((row) => ({
+      id: row.id,
+      user_id: row.user_id,
+      word: row.word,
+      level: row.level as CEFRLevel,
+      pronunciation: row.pronunciation || '',
+      part_of_speech: row.part_of_speech,
+      definition_ar: row.definition_ar,
+      definition_en: row.definition_en,
+      examples: Array.isArray(row.examples) ? row.examples : [],
+      created_at: row.created_at,
+      updated_at: row.updated_at,
+    }));
+  } catch (err) {
+    console.error('Failed to fetch user_custom_words:', err);
+    return [];
+  }
+}
+
+/**
+ * Check if a custom word already exists for a user (by lowercase word).
+ */
+export async function getCustomWordByWord(
+  userId: string,
+  word: string,
+  client: SupabaseClient = supabase
+): Promise<CustomWordItem | null> {
+  if (!isSupabaseConfigured()) return null;
+
+  try {
+    const normalized = word.trim().toLowerCase();
+    const { data, error } = await client
+      .from('user_custom_words')
+      .select('*')
+      .eq('user_id', userId)
+      .ilike('word', normalized)
+      .maybeSingle();
+
+    if (error) {
+      console.error('Error checking user_custom_words for word:', error);
+      return null;
+    }
+
+    if (!data) return null;
+
+    return {
+      id: data.id,
+      user_id: data.user_id,
+      word: data.word,
+      level: data.level as CEFRLevel,
+      pronunciation: data.pronunciation || '',
+      part_of_speech: data.part_of_speech,
+      definition_ar: data.definition_ar,
+      definition_en: data.definition_en,
+      examples: Array.isArray(data.examples) ? data.examples : [],
+      created_at: data.created_at,
+      updated_at: data.updated_at,
+    };
+  } catch (err) {
+    console.error('Failed to get custom word by word:', err);
+    return null;
+  }
+}
+
+/**
+ * Save a new custom word for a user.
+ */
+export async function saveUserCustomWord(
+  userId: string,
+  wordData: {
+    word: string;
+    level: string;
+    part_of_speech: string;
+    pronunciation?: string;
+    definition_ar: string;
+    definition_en: string;
+    examples: Array<{ sentence: string; translation_ar: string }>;
+  },
+  client: SupabaseClient = supabase
+): Promise<CustomWordItem | null> {
+  if (!isSupabaseConfigured()) return null;
+
+  try {
+    const payload = {
+      user_id: userId,
+      word: wordData.word.trim().toLowerCase(),
+      level: wordData.level,
+      part_of_speech: wordData.part_of_speech,
+      pronunciation: wordData.pronunciation || null,
+      definition_ar: wordData.definition_ar,
+      definition_en: wordData.definition_en,
+      examples: wordData.examples || [],
+      updated_at: new Date().toISOString(),
+    };
+
+    const { data, error } = await client
+      .from('user_custom_words')
+      .upsert(payload, { onConflict: 'user_id,word' })
+      .select('*')
+      .single();
+
+    if (error) {
+      console.error('Error saving user_custom_words:', error);
+      throw error;
+    }
+
+    return {
+      id: data.id,
+      user_id: data.user_id,
+      word: data.word,
+      level: data.level as CEFRLevel,
+      pronunciation: data.pronunciation || '',
+      part_of_speech: data.part_of_speech,
+      definition_ar: data.definition_ar,
+      definition_en: data.definition_en,
+      examples: Array.isArray(data.examples) ? data.examples : [],
+      created_at: data.created_at,
+      updated_at: data.updated_at,
+    };
+  } catch (err) {
+    console.error('Failed to save user custom word:', err);
+    throw err;
+  }
+}
+
+/**
+ * Create or initialize a progress row for any word (static or custom)
+ * so it is immediately due in the user's review queue.
+ */
+export async function createInitialWordProgress(
+  userId: string,
+  wordId: string,
+  client: SupabaseClient = supabase
+): Promise<UserProgress | null> {
+  if (!isSupabaseConfigured()) return null;
+
+  try {
+    const now = new Date().toISOString();
+    const payload = {
+      user_id: userId,
+      word_id: wordId,
+      ease_factor: 2.5,
+      interval_minutes: 0,
+      next_review: now,
+      last_reviewed: null,
+      review_count: 0,
+      last_rating: null,
+    };
+
+    const { data, error } = await client
+      .from('user_progress')
+      .upsert(payload, { onConflict: 'user_id,word_id' })
+      .select('*')
+      .single();
+
+    if (error) {
+      console.error('Error creating initial word progress:', error);
+      throw error;
+    }
+
+    return {
+      id: data.id,
+      user_id: data.user_id,
+      word_id: data.word_id,
+      ease_factor: Number(data.ease_factor ?? 2.5),
+      interval_minutes: Number(data.interval_minutes ?? 0),
+      next_review: data.next_review,
+      last_reviewed: data.last_reviewed,
+      review_count: Number(data.review_count ?? 0),
+      last_rating: (data.last_rating as UserProgress['last_rating']) ?? null,
+      created_at: data.created_at,
+    };
+  } catch (err) {
+    console.error('Failed to create initial word progress:', err);
+    throw err;
   }
 }

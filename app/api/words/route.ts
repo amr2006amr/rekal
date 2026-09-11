@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getWordsForLevel, getAllWords } from '@/lib/data/words';
-import { getUserSettings, getUserProgressMap } from '@/lib/services/supabaseService';
+import { getUserSettings, getUserProgressMap, getUserCustomWords } from '@/lib/services/supabaseService';
 import { buildReviewQueue } from '@/lib/storage';
 import { supabase, createAuthedClient } from '@/lib/supabase/client';
 import { CEFRLevel } from '@/types';
@@ -32,10 +32,13 @@ export async function GET(request: NextRequest) {
       // (auth.uid() = user.id), same as /api/review.
       const authedClient = createAuthedClient(token);
 
-      const settings = await getUserSettings(user.id, authedClient);
-      const progressMap = await getUserProgressMap(user.id, authedClient);
+      const [settings, progressMap, customWords] = await Promise.all([
+        getUserSettings(user.id, authedClient),
+        getUserProgressMap(user.id, authedClient),
+        getUserCustomWords(user.id, authedClient),
+      ]);
       const targetLevel = level || settings.level;
-      const queue = buildReviewQueue(targetLevel, progressMap);
+      const queue = buildReviewQueue(targetLevel, progressMap, customWords);
 
       return NextResponse.json({
         level: targetLevel,

@@ -1,10 +1,11 @@
-import { CEFRLevel, ReviewRating, UserProgress, UserSettings, WordItem } from '@/types';
+import { CEFRLevel, ReviewRating, UserProgress, UserSettings, WordItem, CustomWordItem } from '@/types';
 import { calculateNextReview } from './spaced-repetition';
 import { getWordsForLevel, ALL_WORDS_BY_LEVEL, LEVEL_ORDER } from './data/words';
 import {
   getUserSettings,
   saveUserSettings,
   getUserProgressMap,
+  getUserCustomWords,
   resetUserDataInDB,
   DEFAULT_SETTINGS,
 } from './services/supabaseService';
@@ -70,6 +71,25 @@ export async function getEffectiveProgressMap(userId?: string | null): Promise<R
     return data ? JSON.parse(data) : {};
   } catch {
     return {};
+  }
+}
+
+const CUSTOM_WORDS_KEY = 'rekal_user_custom_words';
+
+/**
+ * Fetch custom words for current user
+ */
+export async function getEffectiveCustomWords(userId?: string | null): Promise<WordItem[]> {
+  if (userId && isSupabaseConfigured()) {
+    return await getUserCustomWords(userId);
+  }
+
+  if (typeof window === 'undefined') return [];
+  try {
+    const data = localStorage.getItem(CUSTOM_WORDS_KEY);
+    return data ? JSON.parse(data) : [];
+  } catch {
+    return [];
   }
 }
 
@@ -141,23 +161,45 @@ function buildWeightedNewItemsQueue(
  * Calculate the review queue for a given level and progress map:
  * due words first (unchanged, scheduling-driven), then new words
  * ordered by weighted-random level selection.
+ * Merges due custom words added by the user.
  */
 export function buildReviewQueue(
   level: CEFRLevel,
-  progressMap: Record<string, UserProgress>
+  progressMap: Record<string, UserProgress>,
+  customWords: WordItem[] = []
 ): ReviewQueueItem[] {
   const eligibleWords = getWordsForLevel(level);
   const now = Date.now();
 
   const dueItems: ReviewQueueItem[] = [];
+  const addedWordIds = new Set<string>();
 
+  // 1. Due static words
   for (const word of eligibleWords) {
     const progress = progressMap[word.id];
     if (progress) {
       const nextReviewTime = new Date(progress.next_review).getTime();
       if (nextReviewTime <= now) {
         dueItems.push({ word, progress, isNew: false });
+        addedWordIds.add(word.id);
       }
+    }
+  }
+
+  // 2. Due custom words for this user
+  for (const customWord of customWords) {
+    if (addedWordIds.has(customWord.id)) continue;
+    const progress = progressMap[customWord.id];
+    if (progress) {
+      const nextReviewTime = new Date(progress.next_review).getTime();
+      if (nextReviewTime <= now) {
+        dueItems.push({ word: customWord, progress, isNew: false });
+        addedWordIds.add(customWord.id);
+      }
+    } else {
+      // If custom word doesn't have a progress entry yet, it should be presented as new
+      dueItems.push({ word: customWord, isNew: true });
+      addedWordIds.add(customWord.id);
     }
   }
 

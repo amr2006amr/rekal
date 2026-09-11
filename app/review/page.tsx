@@ -15,7 +15,7 @@ import {
   DAILY_FREE_LIMIT,
   ReviewQueueItem,
 } from '@/lib/storage';
-import { CheckCircle2, Sparkles, ArrowRight, ArrowLeft, Zap, RefreshCw, BarChart3, AlertTriangle } from 'lucide-react';
+import { CheckCircle2, Sparkles, ArrowRight, ArrowLeft, Zap, RefreshCw, BarChart3, AlertTriangle, Flame } from 'lucide-react';
 
 export default function ReviewPage() {
   const { t, locale } = useLanguage();
@@ -28,6 +28,10 @@ export default function ReviewPage() {
   const [progressMap, setProgressMap] = useState<Record<string, UserProgress>>({});
   const [isUpdating, setIsUpdating] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
+  // Holds the new streak number to celebrate, or null when hidden. Set
+  // briefly whenever a review causes current_streak to go up, then
+  // auto-cleared — a passive toast, never blocks the review flow.
+  const [streakToast, setStreakToast] = useState<number | null>(null);
 
   const loadQueue = useCallback(
     (currentSettings: UserSettings, userProgress: Record<string, UserProgress>) => {
@@ -85,6 +89,15 @@ export default function ReviewPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [settingsLoading, settings?.level, user?.id]);
 
+  // Auto-dismiss the streak toast after a few seconds. A ref-free timer
+  // is fine here since streakToast changing is exactly what should
+  // restart/clear it.
+  useEffect(() => {
+    if (streakToast === null) return;
+    const timer = setTimeout(() => setStreakToast(null), 3500);
+    return () => clearTimeout(timer);
+  }, [streakToast]);
+
   // While auth/settings are loading, OR the review queue itself hasn't
   // finished being built yet, show the spinner. Without the queueLoading
   // check, `queue` starts as an empty array and — for a brief moment
@@ -110,6 +123,9 @@ export default function ReviewPage() {
 
     setSubmitError(null);
     setIsUpdating(true);
+    // Captured before the request — the streak value this render already
+    // knew about, so we can tell afterward whether it actually went up.
+    const previousStreak = settings.current_streak ?? 0;
     try {
       const { progress: updatedProg, settings: updatedSet } = await processReview(
         currentItem.word.id,
@@ -129,6 +145,14 @@ export default function ReviewPage() {
         ...prev,
         [currentItem.word.id]: updatedProg,
       }));
+
+      // Only signed-in users get a streak at all (guests have no
+      // current_streak). Celebrate strictly on an actual increase — never
+      // on every review, only the first one of a new day.
+      const newStreak = updatedSet.current_streak ?? 0;
+      if (user && newStreak > previousStreak) {
+        setStreakToast(newStreak);
+      }
 
       if (currentIndex + 1 < queue.length) {
         setCurrentIndex((prev) => prev + 1);
@@ -261,6 +285,20 @@ export default function ReviewPage() {
 
   return (
     <div className="max-w-xl mx-auto py-4 space-y-6">
+      {/* Streak celebration toast — lightweight, non-blocking, auto-dismisses.
+          Fixed to the top of the viewport so it never shifts page layout. */}
+      {streakToast !== null && (
+        <div
+          className="fixed top-20 left-1/2 -translate-x-1/2 z-50 flex items-center gap-2 px-4 py-2.5 bg-gradient-to-l from-amber-500 to-orange-500 text-white rounded-full shadow-xl shadow-orange-500/30 animate-in fade-in slide-in-from-top-4 duration-300"
+          role="status"
+        >
+          <Flame size={18} className="fill-white/30" />
+          <span className="text-sm font-black whitespace-nowrap">
+            {locale === 'ar' ? `يوم ${streakToast} من التتالي! 🔥` : `Day ${streakToast} streak! 🔥`}
+          </span>
+        </div>
+      )}
+
       <ProgressBar
         currentIdx={currentIndex}
         totalCards={queue.length}

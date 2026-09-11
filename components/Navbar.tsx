@@ -9,6 +9,7 @@ import {
   BarChart3,
   Settings as SettingsIcon,
   Sparkles,
+  Flame,
   User as UserIcon,
   LogIn,
   Menu,
@@ -36,6 +37,13 @@ export function Navbar() {
     { href: '/settings', label: t('nav.settings'), icon: SettingsIcon },
   ];
 
+  // Streak is only calculated server-side for signed-in users (inside
+  // record_review()). Guests never have it, and we only show the badge
+  // once it's a positive number — a "0" badge on day one just adds
+  // visual noise before the user has actually earned anything.
+  const streak = settings?.current_streak ?? 0;
+  const showStreak = !!user && streak > 0;
+
   return (
     <header className="sticky top-0 z-40 w-full border-b border-slate-200 dark:border-slate-800 bg-white/90 dark:bg-slate-950/90 backdrop-blur-md">
       <div className="max-w-5xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
@@ -49,23 +57,36 @@ export function Navbar() {
           {mobileMenuOpen ? <X size={20} /> : <Menu size={20} />}
         </button>
 
-        {/* Brand Logo & Name */}
-        <Link
-          href="/"
-          className="flex items-center gap-2.5 group transition-transform active:scale-95"
-        >
-          <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-brand-600 to-emerald-400 flex items-center justify-center text-white shadow-md shadow-brand-500/20 group-hover:scale-105 transition-transform">
-            <Sparkles size={20} className="stroke-[2.2]" />
-          </div>
-          <div className="flex flex-col">
-            <span className="text-xl font-black tracking-tight text-slate-900 dark:text-white leading-none">
-              {t('app_name')}
-            </span>
-            <span className="text-[10px] text-slate-400 font-medium">
-              CEFR Spaced Repetition
-            </span>
-          </div>
-        </Link>
+        {/* Brand Logo & Name + Streak Badge */}
+        <div className="flex items-center gap-2">
+          <Link
+            href="/"
+            className="flex items-center gap-2.5 group transition-transform active:scale-95"
+          >
+            <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-brand-600 to-emerald-400 flex items-center justify-center text-white shadow-md shadow-brand-500/20 group-hover:scale-105 transition-transform">
+              <Sparkles size={20} className="stroke-[2.2]" />
+            </div>
+            <div className="flex flex-col">
+              <span className="text-xl font-black tracking-tight text-slate-900 dark:text-white leading-none">
+                {t('app_name')}
+              </span>
+              <span className="text-[10px] text-slate-400 font-medium">
+                CEFR Spaced Repetition
+              </span>
+            </div>
+          </Link>
+
+          {/* Streak Badge — compact, matches the Level badge's visual weight */}
+          {showStreak && (
+            <div
+              title={t('dashboard.streak_title')}
+              className="flex items-center gap-1 px-2 py-1 bg-amber-50 dark:bg-amber-950/50 border border-amber-200 dark:border-amber-900 rounded-full text-amber-700 dark:text-amber-400 text-xs font-black"
+            >
+              <Flame size={14} className="fill-amber-500 text-amber-500" />
+              <span>{streak}</span>
+            </div>
+          )}
+        </div>
 
         {/* Center Navigation - desktop only, unchanged */}
         <nav className="hidden md:flex items-center gap-1 bg-slate-100 dark:bg-slate-900 p-1 rounded-full border border-slate-200/80 dark:border-slate-800">
