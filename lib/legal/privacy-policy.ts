@@ -35,6 +35,8 @@ export const privacyPolicyContent: Record<'ar' | 'en', PolicyContent> = {
           'البريد الإلكتروني: يُجمع عند إنشاء حسابك أو تسجيل دخولك، سواء عبر البريد الإلكتروني وكلمة المرور أو عبر حساب جوجل (Google OAuth).',
           'المستوى اللغوي: المستوى الذي تختاره وفق معيار الإطار الأوروبي المرجعي المشترك للغات (CEFR)، من A1 إلى C1.',
           'سجل التقدم التعليمي: يشمل تواريخ المراجعة القادمة لكل كلمة، عدد مرات مراجعتها، وتقييمك لصعوبتها.',
+          'الكلمات المخصصة ومفرداتك الخاصة: الكلمات التي تختار إضافتها لحسابك، ومحتوى بطاقاتها التعليمية، وسجل مراجعتك وتقدمك فيها.',
+          'استفسارات المساعد الذكي: نصوص الأسئلة والاستفسارات المعجمية التي ترسلها إلى رِكال AI لغرض تقديم الشرح والأمثلة.',
           'عدد المراجعات اليومية: لتطبيق الحد الأقصى المسموح به ضمن الخطة المجانية.',
           'حالة الاشتراك: مجاني، مفعّل (PRO)، أو غير ذلك من الحالات.',
           'معرّفات الاشتراك: عند الاشتراك المدفوع، نحتفظ بمعرّف الاشتراك ومعرّف العميل الصادرين من مزوّد الدفع Lemon Squeezy، دون أي تفاصيل دفع خام.',
@@ -70,8 +72,9 @@ export const privacyPolicyContent: Record<'ar' | 'en', PolicyContent> = {
       {
         type: 'ul',
         items: [
-          'Supabase: لتخزين بيانات حسابك وبيانات تقدمك التعليمي بشكل آمن.',
+          'Supabase: لتخزين بيانات حسابك وبيانات تقدمك التعليمي وكلماتك المخصصة بشكل آمن.',
           'Lemon Squeezy: لمعالجة عمليات الدفع والاشتراك (كمعالج دفع مستقل يعمل بصفة "بائع السجل").',
+          'Google Cloud (مزود الذكاء الاصطناعي / Gemini API): لمعالجة وتوليد محتوى البطاقات التعليمية للكلمات المخصصة والرد على استفسارات رِكال AI، حيث يُرسل نص الكلمة أو الاستفسار حصراً لغرض التحليل دون مشاركة أي معلومات تعريف شخصية أو بريد إلكتروني.',
           'Google (أدوات التحليل): لتحليل استخدام الموقع، بما يشمل معرفة الموقع الجغرافي التقريبي كما هو موضح أعلاه.',
         ],
       },
@@ -127,6 +130,8 @@ export const privacyPolicyContent: Record<'ar' | 'en', PolicyContent> = {
           'Email address: collected when you create an account or sign in, whether via email and password or Google OAuth.',
           'Language level: the level you select according to the Common European Framework of Reference for Languages (CEFR), from A1 to C1.',
           'Learning progress data: including the next review date for each word, the number of times it has been reviewed, and your difficulty rating for it.',
+          'Custom vocabulary data: words you choose to add to your personal queue, generated card content, and their associated progress and review history.',
+          'AI Assistant inquiries: questions or lexicographical queries you send to Rekal AI solely for generating explanations and contextual examples.',
           "Daily review count: used to enforce the free plan's daily limit.",
           'Subscription status: free, active (PRO), or other applicable states.',
           'Subscription identifiers: for paid subscribers, we retain the subscription ID and customer ID issued by our payment provider, Lemon Squeezy, with no raw payment details.',
@@ -162,8 +167,9 @@ export const privacyPolicyContent: Record<'ar' | 'en', PolicyContent> = {
       {
         type: 'ul',
         items: [
-          'Supabase: to securely store your account data and learning progress data.',
+          'Supabase: to securely store your account data, learning progress data, and custom vocabulary.',
           'Lemon Squeezy: to process payments and subscriptions (as an independent payment processor acting as Merchant of Record).',
+          'Google Cloud (AI Provider / Gemini API): to process and generate educational card content for custom words and answer vocabulary questions in Rekal AI, receiving solely the word or query text without any personal identifiers or email addresses.',
           'Google (analytics tools): to analyze site usage, including determining approximate geographic location as described above.',
         ],
       },

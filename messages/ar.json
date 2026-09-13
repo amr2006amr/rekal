@@ -106,6 +106,11 @@
     "status_scheduled": "مجدولة",
     "reviewed_count_label": "كلمة تمت مراجعتها",
     "empty_reviewed": "لم تراجع أي كلمة بعد. ابدأ جلسة مراجعة لتظهر كلماتك هنا.",
+    "search_placeholder": "ابحث عن أي كلمة...",
+    "no_search_results": "لم يتم العثور على أي كلمة تطابق بحثك",
+    "search_results_count": "نتيجة بحث",
+    "click_card_hint": "اضغط على أي كلمة لعرض بطاقتها الكاملة، أمثلتها، ومستوى صعوبتها",
+    "clear_search": "مسح البحث",
     "streak_label": "يوم متتالي",
     "streak_title": "استمر! راجع يوميًا للحفاظ على سلسلتك",
     "streak_start": "راجع اليوم لتبدأ سلسلتك الأولى 🔥"

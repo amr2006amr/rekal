@@ -11,6 +11,8 @@ When you use the [Company Name] website, we may collect the following types of d
 - **Email address**: collected when you create an account or sign in, whether via email and password or Google OAuth.
 - **Language level**: the level you select according to the Common European Framework of Reference for Languages (CEFR), from A1 to C1.
 - **Learning progress data**: including the next review date for each word, the number of times it has been reviewed, and your difficulty rating for it.
+- **Custom vocabulary data**: words you choose to add to your personal queue, generated card content, and their associated progress and review history.
+- **AI Assistant inquiries**: questions or lexicographical queries you send to Rekal AI solely for generating explanations and contextual examples.
 - **Daily review count**: used to enforce the free plan's daily limit.
 - **Subscription status**: free, active (PRO), or other applicable states.
 - **Subscription identifiers**: for paid subscribers, we retain the subscription ID and customer ID issued by our payment provider, Lemon Squeezy, with no raw payment details.
@@ -37,8 +39,9 @@ We take reasonable technical and organizational measures to protect your data fr
 
 We share your data only with the following parties, each of which handles your data under its own policy:
 
-- **Supabase**: to securely store your account data and learning progress data.
+- **Supabase**: to securely store your account data, learning progress data, and custom vocabulary.
 - **Lemon Squeezy**: to process payments and subscriptions (as an independent payment processor acting as Merchant of Record).
+- **Google Cloud (AI Provider / Gemini API)**: to process and generate educational card content for custom words and answer vocabulary questions in Rekal AI, receiving solely the word or query text without any personal identifiers or email addresses.
 - **Google (analytics tools)**: to analyze site usage, including determining approximate geographic location as described above.
 
 We do not share your data with any party outside this scope.

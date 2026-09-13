@@ -106,6 +106,11 @@
     "status_scheduled": "Scheduled",
     "reviewed_count_label": "Words Reviewed",
     "empty_reviewed": "You haven't reviewed any words yet. Start a review session to see them here.",
+    "search_placeholder": "Search for any word...",
+    "no_search_results": "No words found matching your search",
+    "search_results_count": "search results",
+    "click_card_hint": "Click any word to view its full card, examples, and difficulty level",
+    "clear_search": "Clear search",
     "streak_label": "day streak",
     "streak_title": "Keep it up! Review daily to maintain your streak",
     "streak_start": "Review today to start your first streak 🔥"

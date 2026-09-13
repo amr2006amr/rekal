@@ -20,8 +20,8 @@ export const paymentRefundPolicyContent: Record<'ar' | 'en', PolicyContent> = {
       {
         type: 'ul',
         items: [
-          'الخطة المجانية: حد أقصى 30 مراجعة كلمة يوميًا.',
-          'خطة PRO: عدد غير محدود من المراجعات اليومية، بالإضافة إلى وصول يومي أوسع لميزة رِكال AI (المساعد الذكي).',
+          'الخطة المجانية: حد أقصى 30 مراجعة كلمة يوميًا، مع تجربة إضافة حتى 10 كلمات مخصصة.',
+          'خطة PRO: عدد غير محدود من المراجعات اليومية، وصول يومي سخي ومستمر لإضافة وتوليد الكلمات المخصصة، بالإضافة إلى وصول يومي أوسع لمساعد رِكال الذكي (AI).',
         ],
       },
       { type: 'h2', text: '٢. من يعالج الدفع' },
@@ -92,8 +92,8 @@ export const paymentRefundPolicyContent: Record<'ar' | 'en', PolicyContent> = {
       {
         type: 'ul',
         items: [
-          'Free plan: capped at 30 word reviews per day.',
-          'PRO plan: unlimited daily reviews, plus broader daily access to the Rekal AI smart assistant.',
+          'Free plan: capped at 30 word reviews per day, with the ability to try adding up to 10 custom words.',
+          'PRO plan: unlimited daily reviews, generous continuous daily access to add custom words, plus broader daily access to the Rekal AI smart assistant.',
         ],
       },
       { type: 'h2', text: '2. Who Processes Payment' },

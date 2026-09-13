@@ -66,19 +66,34 @@ export const usageGuidelinesContent: Record<'ar' | 'en', PolicyContent> = {
           'لا يعرض عليك الموقع أي كلمات من مستوى أعلى من مستواك الحالي.',
         ],
       },
-      { type: 'h2', text: '٥. الخطة المجانية مقابل خطة PRO' },
+      { type: 'h2', text: '٥. إضافة كلماتك الخاصة (مفرداتك المخصصة)' },
+      {
+        type: 'p',
+        text: 'يتيح لك رِكال إضافة أي كلمة إنجليزية جديدة تصادفها أثناء قراءتك، دراستك، أو مشاهدتك للمحتوى، لتصبح جزءًا أصيلاً من جدول مراجعتك اليومي:',
+      },
       {
         type: 'ul',
         items: [
-          'الخطة المجانية: حتى 30 مراجعة كلمة/يوم.',
-          'خطة PRO: عدد مراجعات غير محدود.',
+          'البحث الفوري: يبحث الموقع أولاً في قاعدة الكلمات المنهجية، فإن كانت الكلمة موجودة تُضاف مباشرة لطابور مراجعتك دون أي انتظار.',
+          'بطاقة تعليمية متكاملة: إذا كانت الكلمة جديدة، يتم إعداد بطاقة تعليمية شاملة لها تلقائياً تشمل النطق الصوتي، نوع الكلمة، المعنى بالعربية والإنجليزية، و3 أمثلة عملية بسياقات واقعية ومترجمة بدقة.',
+          'التكرار المتباعد المخصص: تدخل الكلمة فوراً في خوارزمية SM-2 وتُجدول مراجعتها حسب إتقانك لها تماماً كباقي الكلمات، مع ظهور شارة مميزة "كلمتي" لتسهيل تمييزها أثناء المراجعة.',
+          'إدارة كلماتك: يمكنك استعراض جميع الكلمات التي أضفتها ومتابعة مستواها وحالتها من صفحة "إضافة كلمة" في أي وقت.',
+        ],
+      },
+      { type: 'h2', text: '٦. الخطة المجانية مقابل خطة PRO' },
+      {
+        type: 'ul',
+        items: [
+          'عدد المراجعات اليومية: حتى 30 مراجعة/يوم في الخطة المجانية، وغير محدود في خطة PRO.',
+          'إضافة كلمات مخصصة: تجربة إضافة حتى 10 كلمات في الخطة المجانية، ووصول يومي سخي ومستمر في خطة PRO.',
+          'رِكال AI (المساعد الذكي): 7 رسائل يوميًا في الخطة المجانية، ووصول يومي سخي جدًا في خطة PRO.',
         ],
       },
       {
         type: 'p',
-        text: 'لو وصلت للحد اليومي بالخطة المجانية، بتحتاج تنتظر لليوم التالي أو تشترك بخطة PRO عشان تكمل المراجعة بدون حدود.',
+        text: 'لو وصلت للحد اليومي بالخطة المجانية، بتحتاج تنتظر لليوم التالي أو تشترك بخطة PRO عشان تكمل التعلم والمراجعة بدون حدود.',
       },
-      { type: 'h2', text: '٦. رِكال AI — مساعدك الذكي' },
+      { type: 'h2', text: '٧. رِكال AI — مساعدك الذكي' },
       {
         type: 'p',
         text: 'رِكال AI بوت ذكاء اصطناعي مدمج بالموقع يجاوب على أي سؤال متعلق بفهم مفردات إنجليزية: شرح المعنى بعمق أكبر، الفرق بين معاني متعددة لنفس الكلمة، وأمثلة إضافية.',
@@ -91,7 +106,7 @@ export const usageGuidelinesContent: Record<'ar' | 'en', PolicyContent> = {
           'خطة PRO: عدد رسائل يومي سخي جدًا.',
         ],
       },
-      { type: 'h2', text: '٧. نصائح للاستفادة القصوى من رِكال' },
+      { type: 'h2', text: '٨. نصائح للاستفادة القصوى من رِكال' },
       {
         type: 'ul',
         items: [
@@ -102,7 +117,7 @@ export const usageGuidelinesContent: Record<'ar' | 'en', PolicyContent> = {
           'تابع تقدمك من لوحة التحكم/الإحصائيات بحسابك، عشان تشوف كم كلمة ثبّتها فعليًا وكم باقي عليك.',
         ],
       },
-      { type: 'h2', text: '٨. إعادة ضبط البيانات' },
+      { type: 'h2', text: '٩. إعادة ضبط البيانات' },
       {
         type: 'p',
         text: 'بإعدادات حسابك، تلقى خيار "إعادة ضبط البيانات". هذا الخيار يمسح سجل تقدمك التعليمي بالكامل (تواريخ المراجعة، تقييماتك السابقة) ويرجّعك تبدأ من الصفر.',
@@ -183,19 +198,34 @@ export const usageGuidelinesContent: Record<'ar' | 'en', PolicyContent> = {
           'The app never shows you words from a level higher than your current one.',
         ],
       },
-      { type: 'h2', text: '5. Free Plan vs. PRO Plan' },
+      { type: 'h2', text: '5. Adding Your Own Custom Words' },
+      {
+        type: 'p',
+        text: 'Rekal lets you add any new English word you encounter during reading, study, work, or media consumption, integrating it directly into your daily review schedule:',
+      },
       {
         type: 'ul',
         items: [
-          'Free plan: up to 30 word reviews/day.',
-          'PRO plan: unlimited reviews.',
+          'Instant Lookup: Rekal checks its curriculum dictionary first; if already present, it is added to your review queue immediately with zero wait time.',
+          'Full Pedagogical Flashcard: If the word is new, a comprehensive learning card is automatically prepared for it — complete with audio pronunciation, part of speech, Arabic and English definitions, and 3 practical translated example sentences in real-world contexts.',
+          'Personalized Spaced Repetition: The word enters the SM-2 scheduling algorithm right away and is tracked according to your mastery, marked with a distinctive "My Word" badge during review sessions.',
+          'Word Management: You can view, track, and manage all your added custom words anytime from the "Add Word" page.',
+        ],
+      },
+      { type: 'h2', text: '6. Free Plan vs. PRO Plan' },
+      {
+        type: 'ul',
+        items: [
+          'Daily word reviews: up to 30 word reviews/day on Free, unlimited on PRO.',
+          'Custom word additions: try up to 10 custom words on Free, generous continuous daily access on PRO.',
+          'Rekal AI assistant: 7 messages per day on Free, very generous daily allowance on PRO.',
         ],
       },
       {
         type: 'p',
-        text: "If you hit the daily limit on the free plan, you'll need to wait until the next day or subscribe to the PRO plan to keep reviewing without limits.",
+        text: "If you hit the daily limit on the free plan, you can wait until the next day or subscribe to the PRO plan to keep learning without limits.",
       },
-      { type: 'h2', text: '6. Rekal AI — Your Smart Assistant' },
+      { type: 'h2', text: '7. Rekal AI — Your Smart Assistant' },
       {
         type: 'p',
         text: 'Rekal AI is a built-in AI chatbot that answers any question related to understanding English vocabulary: deeper meaning explanations, differences between multiple meanings of the same word, and additional examples.',
@@ -208,7 +238,7 @@ export const usageGuidelinesContent: Record<'ar' | 'en', PolicyContent> = {
           'PRO plan: a very generous daily message allowance.',
         ],
       },
-      { type: 'h2', text: '7. Tips to Get the Most Out of Rekal' },
+      { type: 'h2', text: '8. Tips to Get the Most Out of Rekal' },
       {
         type: 'ul',
         items: [
@@ -219,7 +249,7 @@ export const usageGuidelinesContent: Record<'ar' | 'en', PolicyContent> = {
           "Track your progress from your account's dashboard/stats page to see how many words you've truly mastered and how many are left.",
         ],
       },
-      { type: 'h2', text: '8. Resetting Your Data' },
+      { type: 'h2', text: '9. Resetting Your Data' },
       {
         type: 'p',
         text: 'In your account settings, you\'ll find a "Reset Data" option. This completely erases your learning progress history (review dates, past ratings) and starts you from scratch.',

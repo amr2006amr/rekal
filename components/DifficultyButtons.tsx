@@ -89,7 +89,7 @@ export function DifficultyButtons({ progress, onRate, disabled = false }: Diffic
 
   return (
     <div className="w-full">
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 sm:gap-3">
         {buttonConfigs.map((cfg) => {
           const intervalText = getIntervalDisplay(intervals[cfg.key], locale);
           return (
@@ -98,7 +98,8 @@ export function DifficultyButtons({ progress, onRate, disabled = false }: Diffic
               type="button"
               disabled={disabled}
               onClick={() => onRate(cfg.key)}
-              className={`relative flex flex-col items-center justify-between p-3.5 rounded-2xl border-2 transition-all duration-150 transform active:scale-95 shadow-sm hover:shadow-md ${cfg.color} ${cfg.border} disabled:opacity-50 disabled:pointer-events-none group`}
+              title={cfg.desc}
+              className={`relative flex flex-col items-center justify-between py-3 px-2 sm:px-2.5 rounded-2xl border-2 transition-all duration-150 transform active:scale-95 shadow-sm hover:shadow-md ${cfg.color} ${cfg.border} disabled:opacity-50 disabled:pointer-events-none group`}
             >
               {/* Interval badge & keyboard shortcut */}
               <div className="flex items-center justify-between w-full mb-1.5">
@@ -116,7 +117,7 @@ export function DifficultyButtons({ progress, onRate, disabled = false }: Diffic
               </span>
 
               {/* Sub-description */}
-              <span className="text-[11px] opacity-75 text-center line-clamp-1">
+              <span className="text-[11px] leading-tight opacity-75 text-center min-h-[2rem] flex items-center justify-center break-words w-full px-0.5">
                 {cfg.desc}
               </span>
             </button>

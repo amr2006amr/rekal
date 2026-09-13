@@ -8,8 +8,8 @@ This policy explains the details of the paid subscription on the [Company Name] 
 
 The PRO plan subscription is a **monthly, auto-renewing** subscription priced at **$5 USD/month**, unless clearly stated otherwise at checkout. The subscription renews automatically at the end of each monthly cycle unless canceled before the renewal date.
 
-- **Free plan**: capped at 30 word reviews per day.
-- **PRO plan**: unlimited daily reviews.
+- **Free plan**: capped at 30 word reviews per day, with the ability to try adding up to 10 custom words.
+- **PRO plan**: unlimited daily reviews, generous continuous daily access to add custom words, plus broader daily access to the Rekal AI smart assistant.
 
 ## 2. Who Processes Payment
 

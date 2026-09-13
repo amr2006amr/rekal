@@ -5,8 +5,14 @@ import Link from 'next/link';
 import { useLanguage } from '@/lib/i18n/LanguageContext';
 import { useAuth } from '@/lib/auth/AuthContext';
 import { getAllWords } from '@/lib/data/words';
-import { getEffectiveProgressMap, getEffectiveSettings, DAILY_FREE_LIMIT } from '@/lib/storage';
+import {
+  getEffectiveProgressMap,
+  getEffectiveSettings,
+  getEffectiveCustomWords,
+  DAILY_FREE_LIMIT,
+} from '@/lib/storage';
 import { AudioButton } from '@/components/AudioButton';
+import { WordDetailModal } from '@/components/WordDetailModal';
 import { getIntervalDisplay } from '@/lib/spaced-repetition';
 import { UserSettings, UserProgress, WordItem } from '@/types';
 import {
@@ -23,6 +29,9 @@ import {
   User as UserIcon,
   LogIn,
   PlusCircle,
+  Search,
+  X,
+  Sparkles,
 } from 'lucide-react';
 
 export default function DashboardPage() {
@@ -32,17 +41,25 @@ export default function DashboardPage() {
   const [mounted, setMounted] = useState(false);
   const [progressMap, setProgressMap] = useState<Record<string, UserProgress>>({});
   const [words, setWords] = useState<WordItem[]>([]);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [selectedWord, setSelectedWord] = useState<WordItem | null>(null);
   const Arrow = locale === 'ar' ? ArrowLeft : ArrowRight;
 
   useEffect(() => {
-  setMounted(true);
-  const loadData = async () => {
-    const prog = await getEffectiveProgressMap(user?.id);
-    setProgressMap(prog);
-    setWords(getAllWords());
-  };
-  loadData();
-}, [user?.id]);
+    setMounted(true);
+    const loadData = async () => {
+      const [prog, customWords] = await Promise.all([
+        getEffectiveProgressMap(user?.id),
+        getEffectiveCustomWords(user?.id),
+      ]);
+      setProgressMap(prog);
+      const staticWords = getAllWords();
+      const customIds = new Set(customWords.map((w) => w.id));
+      const combined = [...customWords, ...staticWords.filter((w) => !customIds.has(w.id))];
+      setWords(combined);
+    };
+    loadData();
+  }, [user?.id]);
 
   if (!mounted || settingsLoading || !settings) {
     return (
@@ -57,6 +74,18 @@ export default function DashboardPage() {
 
   // Only words the user has actually reviewed (has progress for)
   const reviewedWords = words.filter((w) => !!progressMap[w.id]);
+
+  // Filter words by search query across word text, Arabic/English definitions, part of speech, and level
+  const filteredWords = reviewedWords.filter((w) => {
+    if (!searchQuery.trim()) return true;
+    const q = searchQuery.trim().toLowerCase();
+    const matchWord = w.word.toLowerCase().includes(q);
+    const matchDefAr = w.definition_ar?.toLowerCase().includes(q);
+    const matchDefEn = w.definition_en?.toLowerCase().includes(q);
+    const matchPos = w.part_of_speech?.toLowerCase().includes(q);
+    const matchLevel = w.level?.toLowerCase().includes(q);
+    return matchWord || matchDefAr || matchDefEn || matchPos || matchLevel;
+  });
 
   // Mastered: interval >= 1440 mins (1 day+) and review_count >= 2
   const masteredCount = Object.values(progressMap).filter(
@@ -127,9 +156,7 @@ export default function DashboardPage() {
         </div>
       </div>
 
-      {/* Streak Banner — only shown for signed-in users. A dedicated,
-          visually distinct spotlight (not just another grid stat), since
-          it's meant to feel like an achievement, not a raw metric. */}
+      {/* Streak Banner */}
       {user && (
         <div className="relative overflow-hidden bg-gradient-to-l from-amber-500 via-orange-500 to-amber-600 rounded-3xl p-6 shadow-lg shadow-orange-500/20 flex items-center justify-between gap-4">
           <div className="flex items-center gap-4">
@@ -215,23 +242,74 @@ export default function DashboardPage() {
         </div>
       </div>
 
-      {/* Reviewed Words Table */}
+      {/* Reviewed Words Table & Search */}
       <div className="bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800 overflow-hidden shadow-sm">
-        <div className="p-5 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between">
+        {/* Table Header: Title + Search Input */}
+        <div className="p-4 sm:p-5 border-b border-slate-200 dark:border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div className="flex items-center gap-2">
-            <Layers size={18} className="text-brand-500" />
+            <Layers size={18} className="text-brand-500 shrink-0" />
             <h2 className="text-base font-bold text-slate-900 dark:text-white">
               {t('dashboard.word_list_title')}
             </h2>
+            <span className="text-xs text-slate-400 font-mono">
+              ({reviewedWords.length})
+            </span>
           </div>
-          <span className="text-xs text-slate-400 font-mono">
-            {reviewedWords.length} {t('dashboard.reviewed_count_label')}
-          </span>
+
+          {/* Search Box */}
+          <div className="relative w-full sm:w-72">
+            <Search size={15} className="absolute start-3 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" />
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder={t('dashboard.search_placeholder')}
+              className="w-full ps-9 pe-8 py-2 bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 rounded-xl text-xs text-slate-900 dark:text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 transition-all"
+            />
+            {searchQuery && (
+              <button
+                type="button"
+                onClick={() => setSearchQuery('')}
+                aria-label={t('dashboard.clear_search')}
+                className="absolute end-2.5 top-1/2 -translate-y-1/2 p-0.5 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 rounded-full"
+              >
+                <X size={13} />
+              </button>
+            )}
+          </div>
         </div>
+
+        {/* Subheader Hint & Search Results Counter */}
+        {reviewedWords.length > 0 && (
+          <div className="px-5 py-2.5 bg-slate-50/70 dark:bg-slate-850/40 border-b border-slate-100 dark:border-slate-800/80 flex items-center justify-between text-[11px] text-slate-500 dark:text-slate-400">
+            <span className="flex items-center gap-1.5 font-medium">
+              <span>💡</span>
+              <span>{t('dashboard.click_card_hint')}</span>
+            </span>
+            {searchQuery.trim() && (
+              <span className="font-mono text-brand-600 dark:text-brand-400 font-bold">
+                {filteredWords.length} {t('dashboard.search_results_count')}
+              </span>
+            )}
+          </div>
+        )}
 
         {reviewedWords.length === 0 ? (
           <div className="p-8 text-center text-sm text-slate-500 dark:text-slate-400">
             {t('dashboard.empty_reviewed')}
+          </div>
+        ) : filteredWords.length === 0 ? (
+          <div className="p-10 text-center space-y-2.5">
+            <p className="text-sm font-bold text-slate-700 dark:text-slate-300">
+              {t('dashboard.no_search_results')}
+            </p>
+            <button
+              type="button"
+              onClick={() => setSearchQuery('')}
+              className="text-xs font-semibold text-brand-600 dark:text-brand-400 hover:underline"
+            >
+              {t('dashboard.clear_search')}
+            </button>
           </div>
         ) : (
           <div className="overflow-x-auto">
@@ -247,9 +325,10 @@ export default function DashboardPage() {
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-100 dark:divide-slate-800/80">
-                {reviewedWords.map((w) => {
+                {filteredWords.map((w) => {
                   const prog = progressMap[w.id];
                   const isDue = prog ? new Date(prog.next_review).getTime() <= Date.now() : false;
+                  const isCustom = Boolean((w as any).user_id);
 
                   const statusBadge = isDue ? (
                     <span className="px-2 py-0.5 bg-rose-50 text-rose-700 dark:bg-rose-950/50 dark:text-rose-300 rounded-md font-bold border border-rose-200 dark:border-rose-900">
@@ -262,14 +341,26 @@ export default function DashboardPage() {
                   );
 
                   return (
-                    <tr key={w.id} className="hover:bg-slate-50/70 dark:hover:bg-slate-800/40 transition-colors">
+                    <tr
+                      key={w.id}
+                      onClick={() => setSelectedWord(w)}
+                      className="cursor-pointer hover:bg-brand-50/50 dark:hover:bg-brand-950/20 transition-all group"
+                      title={t('dashboard.click_card_hint')}
+                    >
                       {/* Word + Audio */}
                       <td className="py-3.5 px-4">
                         <div className="flex items-center gap-2">
-                          <AudioButton word={w.word} size="sm" />
-                          <span className="font-bold text-slate-900 dark:text-white text-sm">
+                          <div onClick={(e) => e.stopPropagation()}>
+                            <AudioButton word={w.word} size="sm" />
+                          </div>
+                          <span className="font-bold text-slate-900 dark:text-white text-sm group-hover:text-brand-600 dark:group-hover:text-brand-400 transition-colors">
                             {w.word}
                           </span>
+                          {isCustom && (
+                            <span className="px-1.5 py-0.5 bg-purple-50 dark:bg-purple-950/50 text-purple-700 dark:text-purple-300 border border-purple-200 dark:border-purple-800 rounded text-[10px] font-bold">
+                              {locale === 'ar' ? 'كلمتي' : 'My Word'}
+                            </span>
+                          )}
                           <span className="text-[11px] text-slate-400 font-mono dir-ltr">
                             {w.pronunciation}
                           </span>
@@ -288,18 +379,20 @@ export default function DashboardPage() {
 
                       {/* Definition */}
                       <td className="py-3.5 px-4 max-w-xs truncate text-slate-700 dark:text-slate-300">
-                        {locale === 'ar' ? w.definition_ar : w.definition_en}
+                        {locale === 'ar' ? (w.definition_ar || w.definition_en) : (w.definition_en || w.definition_ar)}
                       </td>
 
                       {/* Next Review / Interval */}
                       <td className="py-3.5 px-4 font-mono text-slate-600 dark:text-slate-400">
                         <div className="flex items-center gap-1.5">
                           <span className="font-semibold text-slate-900 dark:text-white">
-                            {getIntervalDisplay(prog!.interval_minutes, locale)}
+                            {prog ? getIntervalDisplay(prog.interval_minutes, locale) : '-'}
                           </span>
-                          <span className="text-[10px] text-slate-400">
-                            (EF: {prog!.ease_factor})
-                          </span>
+                          {prog && (
+                            <span className="text-[10px] text-slate-400">
+                              (EF: {prog.ease_factor})
+                            </span>
+                          )}
                         </div>
                       </td>
 
@@ -315,6 +408,14 @@ export default function DashboardPage() {
           </div>
         )}
       </div>
+
+      {/* Full Word Details Modal */}
+      <WordDetailModal
+        word={selectedWord}
+        progress={selectedWord ? progressMap[selectedWord.id] : null}
+        isOpen={!!selectedWord}
+        onClose={() => setSelectedWord(null)}
+      />
     </div>
   );
 }

@@ -41,15 +41,32 @@ The new words Rekal shows you aren't fully random:
 - A **gradually smaller portion** comes from **levels below** yours — to reinforce the fundamentals and make sure you don't forget easier words as you advance.
 - **The app never shows you** words from a level **higher** than your current one, so you don't get lost or discouraged by words above your level.
 
-## 5. Free Plan vs. PRO Plan
+## 5. Adding Your Own Custom Words
 
-| | Free Plan | PRO Plan |
+Rekal lets you add any new English word you encounter during reading, study, work, or media consumption, integrating it directly into your daily review schedule:
+
+- **Instant Lookup**: Rekal checks its curriculum dictionary first; if already present, it is added to your review queue immediately with zero wait time.
+- **Full Pedagogical Flashcard**: If the word is new, a comprehensive learning card is automatically prepared for it — complete with audio pronunciation, part of speech, Arabic and English definitions, and 3 practical translated example sentences in real-world contexts.
+- **Personalized Spaced Repetition**: The word enters the SM-2 scheduling algorithm right away and is tracked according to your mastery, marked with a distinctive "My Word" badge during review sessions.
+- **Word Management**: You can view, track, and manage all your added custom words anytime from the "Add Word" page.
+
+## 6. Free Plan vs. PRO Plan
+
+| Feature | Free Plan | PRO Plan |
 |---|---|---|
-| Daily reviews | Up to 30 reviews/day | Unlimited |
+| Daily word reviews | Up to 30 reviews/day | Unlimited |
+| Custom word additions | Try up to 10 custom words | Generous continuous daily access |
+| Rekal AI smart assistant | 7 messages per day | Very generous daily allowance |
 
-If you hit the daily limit on the free plan, you'll need to wait until the next day or subscribe to the PRO plan to keep reviewing without limits.
+If you hit the daily limit on the free plan, you'll need to wait until the next day or subscribe to the PRO plan to keep learning without limits.
 
-## 6. Tips to Get the Most Out of Rekal
+## 7. Rekal AI — Your Smart Assistant
+
+Rekal AI is a built-in AI tutor that answers any question related to understanding English vocabulary: deeper meaning explanations, nuances between multiple definitions, and extra contextual examples:
+- Responds in Arabic if you ask in Arabic, and in English if you ask in English.
+- Accessible to all users with transparent daily limits and expanded access for PRO members.
+
+## 8. Tips to Get the Most Out of Rekal
 
 - **Regular daily review is far better than infrequent intensive sessions.** Even just a few minutes a day beats a full hour once a week — the whole system is built around consistent spaced repetition.
 - **Be honest with your ratings.** Don't mark a word as "easy" just to finish the review faster if you don't actually know it — this throws off the scheduling of future reviews and makes the system push the word further away by mistake, so you end up forgetting it later.
@@ -57,7 +74,7 @@ If you hit the daily limit on the free plan, you'll need to wait until the next 
 - **Read the three example sentences** attached to each word to understand its real usage in different contexts, not just memorize the bare meaning.
 - **Track your progress** from your account's dashboard/stats page to see how many words you've truly mastered and how many are left.
 
-## 7. Resetting Your Data
+## 9. Resetting Your Data
 
 In your account settings, you'll find a "Reset Data" option. This completely erases your learning progress history (review dates, past ratings) and starts you from scratch.
 
