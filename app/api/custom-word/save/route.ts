@@ -45,11 +45,20 @@ export async function POST(request: NextRequest) {
     if (!word || typeof word !== 'string' || !word.trim()) {
       return NextResponse.json({ error: 'Word is required' }, { status: 400 });
     }
+    if (word.trim().length > 50) {
+      return NextResponse.json({ error: 'Word too long' }, { status: 400 });
+    }
     if (!definition_ar || typeof definition_ar !== 'string') {
       return NextResponse.json({ error: 'Arabic definition is required' }, { status: 400 });
     }
+    if (definition_ar.trim().length > 500) {
+      return NextResponse.json({ error: 'Arabic definition too long' }, { status: 400 });
+    }
     if (!definition_en || typeof definition_en !== 'string') {
       return NextResponse.json({ error: 'English definition is required' }, { status: 400 });
+    }
+    if (definition_en.trim().length > 500) {
+      return NextResponse.json({ error: 'English definition too long' }, { status: 400 });
     }
 
     const authedClient = createAuthedClient(token);
@@ -64,7 +73,12 @@ export async function POST(request: NextRequest) {
         pronunciation: pronunciation || '',
         definition_ar: definition_ar.trim(),
         definition_en: definition_en.trim(),
-        examples: Array.isArray(examples) ? examples : [],
+        examples: Array.isArray(examples)
+          ? examples.slice(0, 5).map((ex: any) => ({
+              sentence: String(ex?.sentence || '').slice(0, 300),
+              translation_ar: String(ex?.translation_ar || '').slice(0, 300),
+            }))
+          : [],
       },
       authedClient
     );

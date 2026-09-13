@@ -70,7 +70,15 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Invalid or empty messages array' }, { status: 400 });
     }
 
-    // Filter valid messages
+    // Guard against oversized history arrays
+    if (rawMessages.length > 50) {
+      return NextResponse.json(
+        { error: 'Too many messages. Maximum 50 messages per request.' },
+        { status: 400 }
+      );
+    }
+
+    // Filter valid messages, truncating content to prevent token abuse
     const validMessages: IncomingMessage[] = rawMessages
       .filter(
         (m: any) =>
@@ -80,7 +88,7 @@ export async function POST(request: NextRequest) {
       )
       .map((m: any) => ({
         role: m.role,
-        content: m.content.trim(),
+        content: m.content.trim().slice(0, 2000), // max 2000 chars per message
       }));
 
     if (validMessages.length === 0) {

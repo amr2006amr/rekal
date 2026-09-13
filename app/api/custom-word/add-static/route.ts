@@ -39,6 +39,14 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // Guard against oversized input
+    if (wordId && (typeof wordId !== 'string' || wordId.length > 100)) {
+      return NextResponse.json({ error: 'Invalid wordId' }, { status: 400 });
+    }
+    if (wordText && (typeof wordText !== 'string' || wordText.length > 50)) {
+      return NextResponse.json({ error: 'Invalid word text' }, { status: 400 });
+    }
+
     // Find static word by id or text
     const staticWord = wordId ? getWordById(wordId) : findStaticWord(wordText);
 
