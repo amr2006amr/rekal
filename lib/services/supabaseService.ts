@@ -74,6 +74,10 @@ export async function getUserSettings(
       daily_reviews_used: data.daily_reviews_used ?? 0,
       daily_reset_at: data.daily_reset_at || new Date().toISOString(),
       subscription_status: data.subscription_status || 'free',
+      // Read streak fields persisted by record_review() so the UI shows the
+      // correct streak immediately on page load, without needing a review first.
+      current_streak: data.current_streak ?? 0,
+      last_streak_date: data.last_streak_date ?? null,
     };
 
     // If day changed, persist reset to DB

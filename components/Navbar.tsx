@@ -14,6 +14,7 @@ import {
   LogIn,
   Menu,
   X,
+  PlusCircle,
 } from 'lucide-react';
 import { useLanguage } from '@/lib/i18n/LanguageContext';
 import { useAuth } from '@/lib/auth/AuthContext';
@@ -34,6 +35,7 @@ export function Navbar() {
     { href: '/', label: t('nav.home'), icon: Home },
     { href: '/review', label: t('nav.review'), icon: BookOpen },
     { href: '/dashboard', label: t('nav.dashboard'), icon: BarChart3 },
+    { href: '/add-word', label: t('nav.add_word'), icon: PlusCircle },
     { href: '/settings', label: t('nav.settings'), icon: SettingsIcon },
   ];
 

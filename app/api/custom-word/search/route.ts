@@ -31,7 +31,7 @@ export async function POST(request: NextRequest) {
     const body = await request.json().catch(() => null);
     const rawWord = body?.word;
 
-    if (typeof rawWord !== 'string' || !rawWord.trim()) {
+    if (typeof rawWord !== 'string' || !rawWord.trim() || rawWord.trim().length > 50) {
       return NextResponse.json({ error: 'Invalid or missing word' }, { status: 400 });
     }
 
@@ -96,7 +96,7 @@ export async function GET(request: NextRequest) {
     const { searchParams } = new URL(request.url);
     const rawWord = searchParams.get('word');
 
-    if (!rawWord || !rawWord.trim()) {
+    if (!rawWord || !rawWord.trim() || rawWord.trim().length > 50) {
       return NextResponse.json({ error: 'Invalid or missing word' }, { status: 400 });
     }
 

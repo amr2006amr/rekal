@@ -13,6 +13,7 @@ interface WordCardProps {
   word: WordItem;
   progress?: UserProgress;
   isNew?: boolean;
+  isCustom?: boolean;
   onRate: (rating: ReviewRating) => void;
   onSkip: () => void;
 }
@@ -24,9 +25,10 @@ const RATING_BADGE_COLORS: Record<string, string> = {
   easy: 'text-blue-800 bg-blue-100 border-blue-200 dark:text-blue-300 dark:bg-blue-950/40 dark:border-blue-800/80',
 };
 
-export function WordCard({ word, progress, isNew = false, onRate, onSkip }: WordCardProps) {
+export function WordCard({ word, progress, isNew = false, isCustom, onRate, onSkip }: WordCardProps) {
   const { locale, t } = useLanguage();
   const { user } = useAuth();
+  const isCustomWord = isCustom ?? Boolean((word as any).user_id);
   const [isRevealed, setIsRevealed] = useState(false);
   const [showLoginPrompt, setShowLoginPrompt] = useState(false);
 
@@ -69,13 +71,18 @@ export function WordCard({ word, progress, isNew = false, onRate, onSkip }: Word
     <div className="w-full max-w-xl mx-auto bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 rounded-3xl p-6 sm:p-8 shadow-xl shadow-slate-200/40 dark:shadow-none transition-all duration-300">
       {/* Top Meta Bar */}
       <div className="flex items-center justify-between mb-6">
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 flex-wrap">
           <span className="px-3 py-1 bg-slate-100 dark:bg-slate-800 text-slate-800 dark:text-slate-200 rounded-full text-xs font-black tracking-wider border border-slate-200/60 dark:border-slate-700">
             {word.level}
           </span>
           <span className="px-2.5 py-0.5 bg-brand-50 dark:bg-brand-950/40 text-brand-700 dark:text-brand-300 rounded-md text-xs font-semibold italic">
             {word.part_of_speech}
           </span>
+          {isCustomWord && (
+            <span className="px-2.5 py-0.5 bg-purple-50 dark:bg-purple-950/50 text-purple-700 dark:text-purple-300 border border-purple-200 dark:border-purple-800/80 rounded-full text-xs font-bold">
+              {locale === 'ar' ? 'كلمتي' : 'My Word'}
+            </span>
+          )}
         </div>
 
         {isNew ? (

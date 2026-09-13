@@ -37,10 +37,11 @@ Your task is to analyze a candidate English word submitted by a user:
    - "pronunciation": Standard IPA transcription, e.g. "/ˈkæn.dɪt/".
    - "definition_en": Concise, clear definition in standard English.
    - "definition_ar": Clear, natural definition in standard modern Arabic (فصحى) tailored for Arabic learners.
-   - "examples": Array of exactly 2 practical, natural English sentences containing the word, each with its Arabic translation:
+   - "examples": Array of exactly 3 practical, natural English sentences containing the word, each with its Arabic translation:
      [
-       {"sentence": "English sentence...", "translation_ar": "الترجمة العربية..."},
-       {"sentence": "English sentence...", "translation_ar": "الترجمة العربية..."}
+       {"sentence": "First practical English sentence...", "translation_ar": "ترجمة المثال الأول..."},
+       {"sentence": "Second practical English sentence...", "translation_ar": "ترجمة المثال الثاني..."},
+       {"sentence": "Third practical English sentence...", "translation_ar": "ترجمة المثال الثالث..."}
      ]
 
 You must output ONLY valid JSON matching this schema.`;

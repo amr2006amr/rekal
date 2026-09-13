@@ -6,10 +6,11 @@ import { useLanguage } from '@/lib/i18n/LanguageContext';
 import { useAuth } from '@/lib/auth/AuthContext';
 import { WordCard } from '@/components/WordCard';
 import { ProgressBar } from '@/components/ProgressBar';
-import { ReviewRating, UserSettings, UserProgress } from '@/types';
+import { ReviewRating, UserSettings, UserProgress, WordItem } from '@/types';
 import {
   getEffectiveSettings,
   getEffectiveProgressMap,
+  getEffectiveCustomWords,
   buildReviewQueue,
   processReview,
   DAILY_FREE_LIMIT,
@@ -33,9 +34,16 @@ export default function ReviewPage() {
   // auto-cleared — a passive toast, never blocks the review flow.
   const [streakToast, setStreakToast] = useState<number | null>(null);
 
+  const [customWordsList, setCustomWordsList] = useState<WordItem[]>([]);
+
   const loadQueue = useCallback(
-    (currentSettings: UserSettings, userProgress: Record<string, UserProgress>) => {
-      const dueWords = buildReviewQueue(currentSettings.level, userProgress);
+    (
+      currentSettings: UserSettings,
+      userProgress: Record<string, UserProgress>,
+      customWords: WordItem[] = []
+    ) => {
+      setCustomWordsList(customWords);
+      const dueWords = buildReviewQueue(currentSettings.level, userProgress, customWords);
       setQueue(dueWords);
       setCurrentIndex(0);
     },
@@ -45,9 +53,12 @@ export default function ReviewPage() {
   const loadSession = useCallback(async () => {
     if (!settings) return;
     setQueueLoading(true);
-    const userProgress = await getEffectiveProgressMap(user?.id);
+    const [userProgress, customWords] = await Promise.all([
+      getEffectiveProgressMap(user?.id),
+      getEffectiveCustomWords(user?.id),
+    ]);
     setProgressMap(userProgress);
-    loadQueue(settings, userProgress);
+    loadQueue(settings, userProgress, customWords);
     setQueueLoading(false);
     // Deliberately depends on settings?.level (a primitive), not on the
     // whole `settings` object — see the comment on the effect below for
@@ -161,7 +172,7 @@ export default function ReviewPage() {
           ...progressMap,
           [currentItem.word.id]: updatedProg,
         };
-        const nextDue = buildReviewQueue(updatedSet.level, refreshedMap);
+        const nextDue = buildReviewQueue(updatedSet.level, refreshedMap, customWordsList);
         setQueue(nextDue);
         setCurrentIndex(0);
       }
@@ -318,6 +329,7 @@ export default function ReviewPage() {
         word={currentItem.word}
         progress={currentItem.progress}
         isNew={currentItem.isNew}
+        isCustom={Boolean((currentItem.word as any).user_id)}
         onRate={handleRate}
         onSkip={handleSkip}
       />
