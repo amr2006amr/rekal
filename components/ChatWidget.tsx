@@ -293,7 +293,7 @@ export default function ChatWidget() {
                           ? (locale === 'ar'
                               ? `متبقي اليوم: ${usage.remaining} من ${usage.daily_limit}`
                               : `${usage.remaining} of ${usage.daily_limit} left today`)
-                          : t('chat.status_online')}
+                          : (locale === 'ar' ? 'مساعد تعلّم الإنجليزية' : 'English Learning Assistant')}
                       </span>
                       <Link
                         href="/settings"
@@ -306,7 +306,7 @@ export default function ChatWidget() {
                   )
                 ) : (
                   <span className="text-[11px] text-slate-500 dark:text-slate-400 leading-tight">
-                    {t('chat.status_online')}
+                    {locale === 'ar' ? 'مساعد تعلّم الإنجليزية' : 'English Learning Assistant'}
                   </span>
                 )}
               </div>
@@ -353,7 +353,9 @@ export default function ChatWidget() {
                 {/* Permanent static welcome message bubble (UI only, never sent to Gemini) */}
                 <div className="flex flex-col items-start">
                   <div className="px-3.5 py-2.5 rounded-2xl text-xs sm:text-sm max-w-[90%] bg-slate-100 dark:bg-slate-800 text-slate-800 dark:text-slate-200 rounded-bl-sm border border-slate-200/80 dark:border-slate-700/60 shadow-xs leading-relaxed">
-                    {t('chat.welcome_static_message')}
+                    {locale === 'ar'
+                      ? 'أهلاً بك 👋 أنا رِكال، مساعدك لكل ما يخص تعلّم اللغة الإنجليزية — اسألني عن القواعد، المفردات، نصائح لتطوير مهاراتك، أو تحديد مستواك.'
+                      : 'Welcome 👋 I am Rekal, your assistant for everything related to learning English — ask me about grammar, vocabulary, tips to improve your skills, or assessing your level.'}
                   </div>
                 </div>
 
@@ -421,7 +423,11 @@ export default function ChatWidget() {
                     value={input}
                     onChange={(e) => setInput(e.target.value)}
                     onKeyDown={handleKeyDown}
-                    placeholder={t('chat.input_placeholder')}
+                    placeholder={
+                      locale === 'ar'
+                        ? 'اسأل رِكال عن أي شيء يخص اللغة الإنجليزية...'
+                        : 'Ask Rekal anything about English...'
+                    }
                     disabled={isLoading || (usage !== null && usage.remaining <= 0)}
                     className="flex-1 px-3.5 py-2.5 rounded-xl text-xs sm:text-sm bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-brand-500 disabled:opacity-60 disabled:bg-slate-100 dark:disabled:bg-slate-850"
                   />
