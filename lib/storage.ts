@@ -1,6 +1,6 @@
 import { CEFRLevel, ReviewRating, UserProgress, UserSettings, WordItem, CustomWordItem } from '@/types';
 import { calculateNextReview } from './spaced-repetition';
-import { getWordsForLevel, ALL_WORDS_BY_LEVEL, LEVEL_ORDER } from './data/words';
+import { getWordsForLevel, getWordById, ALL_WORDS_BY_LEVEL, LEVEL_ORDER } from './data/words';
 import {
   getUserSettings,
   saveUserSettings,
@@ -174,14 +174,31 @@ export function buildReviewQueue(
   const dueItems: ReviewQueueItem[] = [];
   const addedWordIds = new Set<string>();
 
-  // 1. Due static words
+  // Helper to check if progress represents a word that has actually been reviewed before
+  const isActuallyReviewed = (p?: UserProgress) =>
+    Boolean(p && p.last_rating && (p.review_count ?? 0) > 0 && p.last_reviewed);
+
+  // 1. Due static words (for user's current level & reinforcement levels)
   for (const word of eligibleWords) {
     const progress = progressMap[word.id];
     if (progress) {
       const nextReviewTime = new Date(progress.next_review).getTime();
       if (nextReviewTime <= now) {
-        dueItems.push({ word, progress, isNew: false });
+        dueItems.push({ word, progress, isNew: !isActuallyReviewed(progress) });
         addedWordIds.add(word.id);
+      }
+    }
+  }
+
+  // 1.5 Due static words explicitly added by user (e.g. from Add Word) that may be from other levels
+  for (const [wordId, progress] of Object.entries(progressMap)) {
+    if (addedWordIds.has(wordId)) continue;
+    const staticWord = getWordById(wordId);
+    if (staticWord) {
+      const nextReviewTime = new Date(progress.next_review).getTime();
+      if (nextReviewTime <= now) {
+        dueItems.push({ word: staticWord, progress, isNew: !isActuallyReviewed(progress) });
+        addedWordIds.add(wordId);
       }
     }
   }
@@ -193,7 +210,7 @@ export function buildReviewQueue(
     if (progress) {
       const nextReviewTime = new Date(progress.next_review).getTime();
       if (nextReviewTime <= now) {
-        dueItems.push({ word: customWord, progress, isNew: false });
+        dueItems.push({ word: customWord, progress, isNew: !isActuallyReviewed(progress) });
         addedWordIds.add(customWord.id);
       }
     } else {
@@ -256,7 +273,14 @@ export async function processReview(
       throw new Error(data.error || 'review_failed');
     }
 
-    return { progress: data.progress, settings: data.settings };
+    const progress: UserProgress = {
+      ...data.progress,
+      last_rating: data.progress?.last_rating || rating,
+      review_count: data.progress?.review_count ?? ((currentProgress?.review_count ?? 0) + 1),
+      last_reviewed: data.progress?.last_reviewed || new Date().toISOString(),
+    };
+
+    return { progress, settings: data.settings };
   }
 
   // Fallback (guest / Supabase not configured): local-only, unchanged.

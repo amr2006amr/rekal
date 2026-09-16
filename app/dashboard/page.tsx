@@ -69,8 +69,19 @@ export default function DashboardPage() {
     );
   }
 
-  // Calculate stats
-  const reviewedCount = Object.keys(progressMap).length;
+  // Only count words the user has actually reviewed at least once —
+  // not words merely added to the queue via Add Words (those get a
+  // user_progress row immediately at creation time with review_count=0).
+  const reviewedCount = Object.values(progressMap).filter(
+    (p) => (p.review_count ?? 0) > 0 && p.last_rating && p.last_reviewed
+  ).length;
+
+  // Sum of all individual review sessions across all words
+  // (e.g. a word reviewed 4 times counts as 4 sessions here)
+  const totalSessions = Object.values(progressMap).reduce(
+    (sum, p) => sum + (p.review_count ?? 0),
+    0
+  );
 
   // Only words the user has actually reviewed (has progress for)
   const reviewedWords = words.filter((w) => !!progressMap[w.id]);
@@ -180,18 +191,45 @@ export default function DashboardPage() {
 
       {/* 4 Stat Cards */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-        {/* Stat 1: Total Reviewed */}
-        <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-5 rounded-2xl shadow-sm">
-          <div className="flex items-center justify-between mb-3 text-brand-600 dark:text-brand-400">
+        {/* Stat 1: Reviewed Words (split into 2 sub-stats) */}
+        <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-5 rounded-2xl shadow-sm flex flex-col gap-3">
+          <div className="flex items-center justify-between text-brand-600 dark:text-brand-400">
             <span className="text-xs font-bold text-slate-500 dark:text-slate-400">
               {t('dashboard.total_words_reviewed')}
             </span>
             <Brain size={18} />
           </div>
-          <div className="flex items-baseline gap-1.5">
-            <span className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white">
-              {reviewedCount}
-            </span>
+
+          {/* Sub-stat: Unique words reviewed */}
+          <div className="flex flex-col gap-0.5">
+            <div className="flex items-baseline gap-1.5">
+              <span className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white">
+                {reviewedCount}
+              </span>
+              <span className="text-[10px] font-semibold text-slate-400 dark:text-slate-500">
+                {t('dashboard.unique_words_reviewed')}
+              </span>
+            </div>
+          </div>
+
+          {/* Divider */}
+          <div className="border-t border-slate-100 dark:border-slate-800" />
+
+          {/* Sub-stat: Total review sessions */}
+          <div className="flex flex-col gap-0.5">
+            <div className="flex items-center justify-between">
+              <span className="text-[10px] font-bold text-slate-400 dark:text-slate-500">
+                {t('dashboard.total_review_sessions')}
+              </span>
+            </div>
+            <div className="flex items-baseline gap-1.5">
+              <span className="text-xl sm:text-2xl font-black text-brand-600 dark:text-brand-400">
+                {totalSessions}
+              </span>
+              <span className="text-[10px] font-semibold text-slate-400 dark:text-slate-500">
+                {t('dashboard.total_sessions_label')}
+              </span>
+            </div>
           </div>
         </div>
 

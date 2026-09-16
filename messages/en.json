@@ -88,7 +88,10 @@
   },
   "dashboard": {
     "title": "Progress & Statistics",
-    "total_words_reviewed": "Total Words Reviewed",
+    "total_words_reviewed": "Words Reviewed",
+    "unique_words_reviewed": "unique word",
+    "total_review_sessions": "Total Review Sessions",
+    "total_sessions_label": "total session",
     "mastered_words": "Mastered Words",
     "learning_words": "Words In Learning",
     "daily_usage": "Today's Reviews",

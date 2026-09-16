@@ -7,7 +7,7 @@ import { AudioButton } from './AudioButton';
 import { DifficultyButtons } from './DifficultyButtons';
 import { useLanguage } from '@/lib/i18n/LanguageContext';
 import { useAuth } from '@/lib/auth/AuthContext';
-import { Eye, BookOpen, Quote, Sparkles, History, Lock, LogIn, SkipForward } from 'lucide-react';
+import { Eye, BookOpen, Quote, Sparkles, History, Lock, LogIn, SkipForward, AlertTriangle } from 'lucide-react';
 
 interface WordCardProps {
   word: WordItem;
@@ -16,6 +16,7 @@ interface WordCardProps {
   isCustom?: boolean;
   onRate: (rating: ReviewRating) => void;
   onSkip: () => void;
+  submitError?: string | null;
 }
 
 const RATING_BADGE_COLORS: Record<string, string> = {
@@ -25,7 +26,7 @@ const RATING_BADGE_COLORS: Record<string, string> = {
   easy: 'text-blue-800 bg-blue-100 border-blue-200 dark:text-blue-300 dark:bg-blue-950/40 dark:border-blue-800/80',
 };
 
-export function WordCard({ word, progress, isNew = false, isCustom, onRate, onSkip }: WordCardProps) {
+export function WordCard({ word, progress, isNew = false, isCustom, onRate, onSkip, submitError }: WordCardProps) {
   const { locale, t } = useLanguage();
   const { user } = useAuth();
   const isCustomWord = isCustom ?? Boolean((word as any).user_id);
@@ -63,6 +64,13 @@ export function WordCard({ word, progress, isNew = false, isCustom, onRate, onSk
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [user]);
 
+  const isNewWord =
+    isNew ||
+    !progress ||
+    !progress.last_rating ||
+    (progress.review_count ?? 0) === 0 ||
+    !progress.last_reviewed;
+
   const ratingBadgeClass = progress?.last_rating
     ? RATING_BADGE_COLORS[progress.last_rating]
     : 'text-slate-500 bg-slate-100 border-slate-200 dark:bg-slate-800 dark:border-slate-700';
@@ -85,7 +93,7 @@ export function WordCard({ word, progress, isNew = false, isCustom, onRate, onSk
           )}
         </div>
 
-        {isNew ? (
+        {isNewWord ? (
           <span className="flex items-center gap-1 text-[11px] font-bold text-amber-600 bg-amber-50 dark:bg-amber-950/50 border border-amber-200 dark:border-amber-900/60 px-2.5 py-0.5 rounded-full">
             <Sparkles size={12} />
             {t('review.new_badge')}
@@ -209,6 +217,12 @@ export function WordCard({ word, progress, isNew = false, isCustom, onRate, onSk
               {t('review.rate_prompt')}
             </p>
             <DifficultyButtons progress={progress} onRate={onRate} />
+            {submitError && (
+              <div className="mt-4 p-3 bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-900/60 text-xs text-rose-700 dark:text-rose-300 rounded-xl flex items-center gap-2 animate-in fade-in duration-200">
+                <AlertTriangle size={14} className="shrink-0" />
+                <span>{submitError}</span>
+              </div>
+            )}
           </div>
         </div>
       )}

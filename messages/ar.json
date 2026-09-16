@@ -88,7 +88,10 @@
   },
   "dashboard": {
     "title": "لوحة الإحصائيات والتقدم",
-    "total_words_reviewed": "إجمالي الكلمات المراجعة",
+    "total_words_reviewed": "الكلمات المراجعة",
+    "unique_words_reviewed": "كلمة مراجعة",
+    "total_review_sessions": "إجمالي جلسات المراجعة",
+    "total_sessions_label": "جلسة مراجعة كاملة",
     "mastered_words": "كلمات متقنة (فترة طويلة)",
     "learning_words": "كلمات قيد التثبيت",
     "daily_usage": "المراجعات المستخدمة اليوم",

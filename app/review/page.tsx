@@ -16,7 +16,7 @@ import {
   DAILY_FREE_LIMIT,
   ReviewQueueItem,
 } from '@/lib/storage';
-import { CheckCircle2, Sparkles, ArrowRight, ArrowLeft, Zap, RefreshCw, BarChart3, AlertTriangle, Flame } from 'lucide-react';
+import { CheckCircle2, Sparkles, ArrowRight, ArrowLeft, Zap, RefreshCw, BarChart3, Flame } from 'lucide-react';
 
 export default function ReviewPage() {
   const { t, locale } = useLanguage();
@@ -317,13 +317,6 @@ export default function ReviewPage() {
         subscriptionStatus={settings.subscription_status}
       />
 
-      {submitError && (
-        <div className="p-3 bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-900/60 text-xs text-rose-700 dark:text-rose-300 rounded-xl flex items-center gap-2">
-          <AlertTriangle size={14} />
-          <span>{submitError}</span>
-        </div>
-      )}
-
       <WordCard
         key={currentItem.word.id}
         word={currentItem.word}
@@ -332,6 +325,7 @@ export default function ReviewPage() {
         isCustom={Boolean((currentItem.word as any).user_id)}
         onRate={handleRate}
         onSkip={handleSkip}
+        submitError={submitError}
       />
     </div>
   );
