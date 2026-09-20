@@ -159,8 +159,8 @@ function buildWeightedNewItemsQueue(
 
 /**
  * Calculate the review queue for a given level and progress map:
- * due words first (unchanged, scheduling-driven), then new words
- * ordered by weighted-random level selection.
+ * alternates due words and new words (due -> new -> due -> new),
+ * appending any remainder at the end.
  * Merges due custom words added by the user.
  */
 export function buildReviewQueue(
@@ -222,7 +222,20 @@ export function buildReviewQueue(
 
   const newItems = buildWeightedNewItemsQueue(level, progressMap);
 
-  return [...dueItems, ...newItems];
+  // Interleave due words and new words (due -> new -> due -> new...)
+  // Any remaining items from either array are appended consecutively at the end.
+  const queue: ReviewQueueItem[] = [];
+  const maxLen = Math.max(dueItems.length, newItems.length);
+  for (let i = 0; i < maxLen; i++) {
+    if (i < dueItems.length) {
+      queue.push(dueItems[i]);
+    }
+    if (i < newItems.length) {
+      queue.push(newItems[i]);
+    }
+  }
+
+  return queue;
 }
 
 /**
