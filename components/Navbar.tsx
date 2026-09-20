@@ -49,21 +49,21 @@ export function Navbar() {
   return (
     <header className="sticky top-0 z-40 w-full border-b border-slate-200 dark:border-slate-800 bg-white/90 dark:bg-slate-950/90 backdrop-blur-md">
       <div className="max-w-5xl mx-auto px-3 sm:px-6 h-16 flex items-center justify-between">
-        {/* Mobile Hamburger Button */}
-        <button
-          type="button"
-          onClick={() => setMobileMenuOpen((prev) => !prev)}
-          className="md:hidden flex items-center justify-center w-8 h-8 sm:w-9 sm:h-9 rounded-xl border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 active:scale-95 transition-transform shrink-0"
-          aria-label={mobileMenuOpen ? t('nav.close_menu') || 'Close menu' : t('nav.open_menu') || 'Open menu'}
-        >
-          {mobileMenuOpen ? <X size={18} className="sm:w-5 sm:h-5" /> : <Menu size={18} className="sm:w-5 sm:h-5" />}
-        </button>
+        {/* Brand & Navigation Start Block (Hamburger + Logo & Name + Streak) */}
+        <div className="flex items-center gap-2 sm:gap-3">
+          {/* Mobile Hamburger Button */}
+          <button
+            type="button"
+            onClick={() => setMobileMenuOpen((prev) => !prev)}
+            className="md:hidden flex items-center justify-center w-8 h-8 sm:w-9 sm:h-9 rounded-xl border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 active:scale-95 transition-transform shrink-0"
+            aria-label={mobileMenuOpen ? t('nav.close_menu') || 'Close menu' : t('nav.open_menu') || 'Open menu'}
+          >
+            {mobileMenuOpen ? <X size={18} className="sm:w-5 sm:h-5" /> : <Menu size={18} className="sm:w-5 sm:h-5" />}
+          </button>
 
-        {/* Brand Logo & Name + Streak Badge */}
-        <div className="flex items-center gap-1.5 sm:gap-2">
           <Link
             href="/"
-            className="flex items-center gap-2 sm:gap-2.5 group transition-transform active:scale-95"
+            className="flex items-center gap-2 sm:gap-2.5 group transition-transform active:scale-95 shrink-0"
           >
             <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-gradient-to-tr from-brand-600 to-emerald-400 flex items-center justify-center text-white shadow-md shadow-brand-500/20 group-hover:scale-105 transition-transform shrink-0">
               <Sparkles size={17} className="sm:w-5 sm:h-5 stroke-[2.2]" />
@@ -82,9 +82,9 @@ export function Navbar() {
           {showStreak && (
             <div
               title={t('dashboard.streak_title')}
-              className="flex items-center gap-1 px-1.5 py-0.5 sm:px-2 sm:py-1 bg-amber-50 dark:bg-amber-950/50 border border-amber-200 dark:border-amber-900 rounded-full text-amber-700 dark:text-amber-400 text-[11px] sm:text-xs font-black shrink-0"
+              className="flex items-center gap-1 h-8 sm:h-9 px-2 sm:px-2.5 bg-amber-50 dark:bg-amber-950/50 border border-amber-200 dark:border-amber-900 rounded-full text-amber-700 dark:text-amber-400 text-xs font-black shrink-0"
             >
-              <Flame size={13} className="fill-amber-500 text-amber-500 sm:w-3.5 sm:h-3.5" />
+              <Flame size={14} className="fill-amber-500 text-amber-500" />
               <span>{streak}</span>
             </div>
           )}
@@ -113,12 +113,12 @@ export function Navbar() {
         </nav>
 
         {/* Actions (Level Badge + Language Switcher + User/Login) */}
-        <div className="flex items-center gap-1.5 sm:gap-2.5">
+        <div className="flex items-center gap-1.5 sm:gap-2.5 shrink-0">
           {/* Level Badge */}
           <Link
             href="/onboarding"
             title={t('dashboard.change_level')}
-            className="flex items-center gap-1 px-2 py-0.5 sm:px-2.5 sm:py-1 bg-brand-50 hover:bg-brand-100 dark:bg-brand-950/60 dark:hover:bg-brand-900/80 border border-brand-200 dark:border-brand-800 rounded-full text-brand-700 dark:text-brand-300 text-xs font-bold transition-colors shrink-0"
+            className="flex items-center gap-1 h-8 sm:h-9 px-2.5 sm:px-3 bg-brand-50 hover:bg-brand-100 dark:bg-brand-950/60 dark:hover:bg-brand-900/80 border border-brand-200 dark:border-brand-800 rounded-full text-brand-700 dark:text-brand-300 text-xs font-bold transition-colors shrink-0"
           >
             <span className="hidden sm:inline text-[10px] text-brand-500 font-normal">{t('nav.level')}</span>
             <span>{settings?.level || 'B2'}</span>
@@ -132,14 +132,14 @@ export function Navbar() {
             <Link
               href="/settings"
               title={user.email || 'Account'}
-              className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-brand-100 dark:bg-brand-950 border border-brand-300 dark:border-brand-700 text-brand-700 dark:text-brand-300 font-bold text-xs flex items-center justify-center transition-transform hover:scale-105 shrink-0"
+              className="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-brand-100 dark:bg-brand-950 border border-brand-300 dark:border-brand-700 text-brand-700 dark:text-brand-300 font-bold text-xs flex items-center justify-center transition-transform hover:scale-105 shrink-0"
             >
-              {user.email ? user.email.charAt(0).toUpperCase() : <UserIcon size={13} />}
+              {user.email ? user.email.charAt(0).toUpperCase() : <UserIcon size={14} />}
             </Link>
           ) : (
             <Link
               href="/login"
-              className="flex items-center gap-1 px-2.5 py-1 sm:px-3 sm:py-1.5 bg-slate-900 hover:bg-slate-800 dark:bg-brand-600 dark:hover:bg-brand-500 text-white rounded-full text-xs font-bold transition-all shadow-sm shrink-0"
+              className="flex items-center gap-1 h-8 sm:h-9 px-2.5 sm:px-3.5 bg-slate-900 hover:bg-slate-800 dark:bg-brand-600 dark:hover:bg-brand-500 text-white rounded-full text-xs font-bold transition-all shadow-sm shrink-0"
             >
               <LogIn size={13} />
               <span className="hidden sm:inline">{t('nav.login')}</span>

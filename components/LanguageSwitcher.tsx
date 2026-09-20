@@ -11,7 +11,7 @@ export function LanguageSwitcher({ className = '' }: { className?: string }) {
     <button
       type="button"
       onClick={toggleLocale}
-      className={`inline-flex items-center gap-1 sm:gap-2 px-2 py-0.5 sm:px-3 sm:py-1.5 rounded-full text-xs font-semibold border transition-all duration-150 shrink-0 ${
+      className={`inline-flex items-center gap-1 sm:gap-2 h-8 sm:h-9 px-2.5 sm:px-3 rounded-full text-xs font-semibold border transition-all duration-150 shrink-0 ${
         locale === 'ar'
           ? 'bg-slate-100 dark:bg-slate-800 text-slate-800 dark:text-slate-100 border-slate-200 dark:border-slate-700 hover:border-brand-500'
           : 'bg-slate-100 dark:bg-slate-800 text-slate-800 dark:text-slate-100 border-slate-200 dark:border-slate-700 hover:border-brand-500'
