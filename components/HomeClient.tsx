@@ -23,7 +23,7 @@ export default function HomeClient() {
           <span>{locale === 'ar' ? 'نظام التكرار المتباعد الذكي' : 'Smart Spaced Repetition'}</span>
         </div>
 
-        <h1 className="text-4xl sm:text-6xl font-black text-slate-900 dark:text-white tracking-tight leading-[1.15]">
+        <h1 className="text-3xl sm:text-5xl font-black text-slate-900 dark:text-white tracking-tight leading-[1.2]">
           {t('home.hero_title')}
         </h1>
 
@@ -101,17 +101,13 @@ export default function HomeClient() {
         <div className="space-y-1 text-center sm:text-start">
           <div className="flex items-center justify-center sm:justify-start gap-2 text-xs font-bold text-brand-400">
             <Sparkles size={16} />
-            <span>{locale === 'ar' ? 'الباقة المميزة' : 'Premium Plan'}</span>
+            <span>{t('home.banner_badge')}</span>
           </div>
           <h4 className="text-xl font-bold">
-            {locale === 'ar'
-              ? 'اشترك واحصل على عدد غير محدود من الكلمات يومياً'
-              : 'Subscribe for unlimited daily reviews'}
+            {t('home.banner_title')}
           </h4>
           <p className="text-xs text-slate-300">
-            {locale === 'ar'
-              ? 'تجاوز حد الـ30 مراجعة يومية وراجع بلا قيود مقابل $5 فقط شهرياً.'
-              : 'Break past the 30-review daily limit — unlimited reviews for just $5/month.'}
+            {t('home.banner_desc')}
           </p>
         </div>
 
@@ -120,7 +116,7 @@ export default function HomeClient() {
           className="px-5 py-2.5 bg-brand-600 hover:bg-brand-500 text-white rounded-xl text-xs font-bold transition-colors whitespace-nowrap flex items-center gap-1.5"
         >
           <Zap size={14} />
-          <span>{locale === 'ar' ? 'اشترك الآن' : 'Subscribe Now'}</span>
+          <span>{t('home.banner_button')}</span>
         </Link>
       </div>
     </div>

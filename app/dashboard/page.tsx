@@ -178,7 +178,13 @@ export default function DashboardPage() {
               <div className="flex items-baseline gap-1.5">
                 <span className="text-3xl sm:text-4xl font-black text-white">{streak}</span>
                 <span className="text-sm font-bold text-white/90">
-                  {t('dashboard.streak_label')}
+                  {locale === 'ar'
+                    ? (streak >= 2 && streak <= 10
+                        ? t('dashboard.streak_label_plural')
+                        : t('dashboard.streak_label_single'))
+                    : (streak === 1
+                        ? t('dashboard.streak_label_single')
+                        : t('dashboard.streak_label_plural'))}
                 </span>
               </div>
               <p className="text-xs text-white/80 font-medium">
@@ -426,11 +432,6 @@ export default function DashboardPage() {
                           <span className="font-semibold text-slate-900 dark:text-white">
                             {prog ? getIntervalDisplay(prog.interval_minutes, locale) : '-'}
                           </span>
-                          {prog && (
-                            <span className="text-[10px] text-slate-400">
-                              (EF: {prog.ease_factor})
-                            </span>
-                          )}
                         </div>
                       </td>
 

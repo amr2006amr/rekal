@@ -116,3 +116,43 @@ export function getNextIntervalPreviews(
     easy: calculateNextReview(progress, 'easy').intervalMinutes,
   };
 }
+
+/**
+ * Formats a day count dynamically with proper grammar for Arabic and English.
+ * Arabic rules:
+ * 1 -> "1 يوم"
+ * 2-10 -> `${count} أيام`
+ * 11+ -> `${count} يوم`
+ * English rules:
+ * 1 -> "1 day"
+ * other -> `${count} days`
+ */
+export function formatDays(count: number, locale: 'ar' | 'en' = 'ar'): string {
+  if (locale === 'en') {
+    return count === 1 ? '1 day' : `${count} days`;
+  }
+  if (count === 1) return '1 يوم';
+  if (count >= 2 && count <= 10) return `${count} أيام`;
+  return `${count} يوم`;
+}
+
+/**
+ * Returns the proper streak suffix dynamically.
+ * Arabic:
+ * 1 -> "يوم متتالي"
+ * 2-10 -> "أيام متتالية"
+ * 11+ -> "يوم متتالي"
+ * English:
+ * 1 -> "day streak"
+ * other -> "days streak"
+ */
+export function getStreakSuffix(count: number, locale: 'ar' | 'en' = 'ar'): string {
+  if (locale === 'en') {
+    return count === 1 ? 'day streak' : 'days streak';
+  }
+  if (count >= 2 && count <= 10) {
+    return 'أيام متتالية';
+  }
+  return 'يوم متتالي';
+}
+

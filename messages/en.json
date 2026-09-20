@@ -42,12 +42,16 @@
     "hero_desc": "Smart, effortless spaced repetition built on CEFR standards and SM-2 algorithm.",
     "start_now": "Start Reviewing Now",
     "select_level": "Choose Your Level",
-    "feature_1_title": "Zero Setup Required",
-    "feature_1_desc": "Pick your CEFR level and start reviewing high-yield curated words in seconds.",
+    "feature_1_title": "Start Instantly",
+    "feature_1_desc": "Choose your level and start reviewing words without complicated setup, with a carefully crafted word bank.",
     "feature_2_title": "Adaptive SM-2 Algorithm",
     "feature_2_desc": "Spaced repetition predicts memory decay and brings back words right when you need to reinforce them.",
-    "feature_3_title": "True Bilingual Depth",
-    "feature_3_desc": "Crystal clear Arabic definitions & context, or single-click Oxford-style English immersion."
+    "feature_3_title": "Learn in Arabic or English",
+    "feature_3_desc": "Learn the meaning and context of each word with clear Arabic explanations, or use the entire site in English.",
+    "banner_badge": "Premium Plan",
+    "banner_title": "Get unlimited access to reviews and daily word additions.",
+    "banner_desc": "Go beyond the 30-review daily limit and add your own words for review for only $5/month.",
+    "banner_button": "Subscribe now"
   },
   "onboarding": {
     "title": "What is your current English level?",
@@ -115,6 +119,8 @@
     "click_card_hint": "Click any word to view its full card, examples, and difficulty level",
     "clear_search": "Clear search",
     "streak_label": "day streak",
+    "streak_label_single": "day streak",
+    "streak_label_plural": "days streak",
     "streak_title": "Keep it up! Review daily to maintain your streak",
     "streak_start": "Review today to start your first streak 🔥"
   },

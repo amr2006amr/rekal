@@ -264,7 +264,7 @@ export function WordDetailModal({ word, progress, isOpen, onClose }: WordDetailM
               {/* Ease Factor */}
               <div className="bg-white dark:bg-slate-900 p-2.5 rounded-xl border border-slate-200/70 dark:border-slate-800">
                 <span className="text-[11px] text-slate-400 block mb-0.5">
-                  {locale === 'ar' ? 'معامل السهولة (EF)' : 'Ease Factor'}
+                  {locale === 'ar' ? 'معامل السهولة' : 'Ease Factor'}
                 </span>
                 <span className="font-mono font-black text-slate-800 dark:text-slate-100 text-sm">
                   {easeFactor.toFixed(2)}
