@@ -41,6 +41,7 @@ export interface UserSettings {
   // every read site must fall back with ?? 0 / ?? null.
   current_streak?: number;
   last_streak_date?: string | null;
+  locale?: string;
 }
 
 export type Locale = 'ar' | 'en';

@@ -6,6 +6,7 @@ import { AuthProvider } from '@/lib/auth/AuthContext';
 import { Navbar } from '@/components/Navbar';
 import ConditionalFooter from '@/components/ConditionalFooter';
 import ChatWidget from '@/components/ChatWidget';
+import OnboardingGate from '@/components/OnboardingGate';
 
 export const metadata: Metadata = {
   title: 'رِكال (Rekal) — تطبيق مراجعة المفردات بالتكرار المتباعد',
@@ -30,7 +31,7 @@ export default function RootLayout({
           <AuthProvider>
             <Navbar />
             <main className="flex-1 max-w-5xl w-full mx-auto px-4 sm:px-6 py-6 pb-24 md:pb-12">
-              {children}
+              <OnboardingGate>{children}</OnboardingGate>
             </main>
             <ConditionalFooter />
             <ChatWidget />

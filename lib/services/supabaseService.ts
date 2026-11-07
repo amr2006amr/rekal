@@ -78,6 +78,7 @@ export async function getUserSettings(
       // correct streak immediately on page load, without needing a review first.
       current_streak: data.current_streak ?? 0,
       last_streak_date: data.last_streak_date ?? null,
+      locale: data.locale ?? undefined,
     };
 
     // If day changed, persist reset to DB
@@ -98,21 +99,24 @@ export async function getUserSettings(
  */
 export async function saveUserSettings(
   userId: string,
-  settings: UserSettings,
+  settings: Partial<UserSettings>,
   client: SupabaseClient = supabase
 ): Promise<void> {
   if (!isSupabaseConfigured()) return;
 
   try {
+    const payload: Record<string, any> = {
+      user_id: userId,
+    };
+    if (settings.level !== undefined) payload.level = settings.level;
+    if (settings.daily_reviews_used !== undefined) payload.daily_reviews_used = settings.daily_reviews_used;
+    if (settings.daily_reset_at !== undefined) payload.daily_reset_at = settings.daily_reset_at;
+    if (settings.subscription_status !== undefined) payload.subscription_status = settings.subscription_status;
+    if (settings.locale !== undefined) payload.locale = settings.locale;
+
     const { error } = await client
       .from('user_settings')
-      .upsert({
-        user_id: userId,
-        level: settings.level,
-        daily_reviews_used: settings.daily_reviews_used,
-        daily_reset_at: settings.daily_reset_at,
-        subscription_status: settings.subscription_status,
-      });
+      .upsert(payload, { onConflict: 'user_id' });
 
     if (error) console.error('Error saving user_settings:', error);
   } catch (err) {

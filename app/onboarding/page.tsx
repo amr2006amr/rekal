@@ -4,8 +4,8 @@ import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useLanguage } from '@/lib/i18n/LanguageContext';
 import { useAuth } from '@/lib/auth/AuthContext';
-import { CEFRLevel } from '@/types';
-import { getEffectiveSettings, saveEffectiveSettings } from '@/lib/storage';
+import { CEFRLevel, UserSettings } from '@/types';
+import { getEffectiveSettings } from '@/lib/storage';
 import { Check, Sparkles, ArrowLeft, ArrowRight } from 'lucide-react';
 
 const LEVEL_DETAILS: {
@@ -60,7 +60,7 @@ const LEVEL_DETAILS: {
 
 export default function OnboardingPage() {
   const { t, locale } = useLanguage();
-  const { user, loading: authLoading } = useAuth();
+  const { user, loading: authLoading, updateSettings } = useAuth();
   const router = useRouter();
   const [selectedLevel, setSelectedLevel] = useState<CEFRLevel>('B2');
   const [saving, setSaving] = useState(false);
@@ -78,13 +78,11 @@ export default function OnboardingPage() {
     setSaving(true);
     try {
       const current = await getEffectiveSettings(user?.id);
-      await saveEffectiveSettings(
-        {
-          ...current,
-          level: selectedLevel,
-        },
-        user?.id
-      );
+      const updated: UserSettings = {
+        ...current,
+        level: selectedLevel,
+      };
+      await updateSettings(updated);
       router.push('/review');
     } finally {
       setSaving(false);
