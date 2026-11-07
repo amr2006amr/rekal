@@ -6,20 +6,43 @@ import { useAuth } from '@/lib/auth/AuthContext';
 import { useLanguage } from '@/lib/i18n/LanguageContext';
 import { getEffectiveSettings, saveEffectiveSettings } from '@/lib/storage';
 
-/** Paths that are always accessible — no gate checks applied. */
-const PUBLIC_PATHS = ['/language-select', '/login', '/auth'];
+/**
+ * Paths that any visitor can access without logging in
+ * (informational, legal, marketing, and auth-entry pages).
+ */
+const PUBLIC_PATHS = [
+  '/language-select',
+  '/login',
+  '/auth',
+  '/privacy',
+  '/payment-refund',
+  '/guide',
+  '/word',
+];
 
-function isPublicPath(pathname: string): boolean {
-  return PUBLIC_PATHS.some(
+function isPublicPath(pathname: string, hasLocale = true): boolean {
+  const isDirectPublic = PUBLIC_PATHS.some(
     (p) => pathname === p || pathname.startsWith(p + '/')
   );
+  if (isDirectPublic) return true;
+
+  // Root landing page is public once a language is chosen
+  if (pathname === '/' && hasLocale) return true;
+
+  return false;
 }
 
 /**
  * Client-side onboarding gate.
  *
- * Enforces the flow:
+ * Enforces the core flow:
  *   1. Language chosen  →  2. Signed in  →  3. CEFR level set  →  4. App
+ *
+ * Public/informational pages (/privacy, /guide, /payment-refund, /word, etc.)
+ * are accessible before login without being forced back to /login.
+ *
+ * Core features (/review, /add-word, /dashboard, /settings, /onboarding)
+ * strictly require login and onboarding.
  */
 export default function OnboardingGate({
   children,
@@ -42,25 +65,24 @@ export default function OnboardingGate({
       return;
     }
 
-    // Public paths are always rendered immediately
-    if (isPublicPath(pathname)) {
-      console.log(`[OnboardingGate] Path: ${pathname} | Status: Public path | Action: Allow immediately`);
-      setGateReady(true);
-      return;
-    }
-
-    // 1. Check Language
     const storedLocale = typeof window !== 'undefined' ? localStorage.getItem('rekal_locale') : null;
     const accountLocale = settings?.locale;
 
-    // After login: if user has locale in account but not in localStorage,
-    // apply account locale and write to localStorage
+    // After login: if user has locale in account but not in localStorage, apply it
     if (user && accountLocale && (accountLocale === 'ar' || accountLocale === 'en') && !storedLocale) {
       setLocale(accountLocale as 'ar' | 'en');
     }
 
     const effectiveLocale = storedLocale || (user && accountLocale ? accountLocale : null);
 
+    // Public / informational paths are accessible without login
+    if (isPublicPath(pathname, Boolean(effectiveLocale))) {
+      console.log(`[OnboardingGate] Path: ${pathname} | Status: Public path | Action: Allow immediately`);
+      setGateReady(true);
+      return;
+    }
+
+    // 1. Check Language (for app paths)
     if (!effectiveLocale) {
       console.log(`[OnboardingGate] Path: ${pathname} | Locale: None | Action: Redirect -> /language-select`);
       hasResolved.current = false;
@@ -69,7 +91,7 @@ export default function OnboardingGate({
       return;
     }
 
-    // 2. Check Authentication
+    // 2. Check Authentication (for protected paths: /review, /add-word, /dashboard, /settings, /onboarding)
     if (!user) {
       console.log(`[OnboardingGate] Path: ${pathname} | Locale: ${effectiveLocale} | User: None | Action: Redirect -> /login`);
       hasResolved.current = false;
@@ -78,7 +100,7 @@ export default function OnboardingGate({
       return;
     }
 
-    // Background sync: If user has chosen a language but account lacks it, save to account
+    // Background sync: If user chose a language and account lacks it, save to account
     if (effectiveLocale && !accountLocale && !isSyncingLocale.current) {
       isSyncingLocale.current = true;
       const updated = {
@@ -152,11 +174,11 @@ export default function OnboardingGate({
     setLocalSettings,
   ]);
 
-  // Loading spinner during initial auth/settings resolution OR before gate resolves.
-  // Once hasResolved.current is true, internal page navigation NEVER shows spinner!
+  // Loading spinner during initial resolution.
+  // Once hasResolved.current is true OR the path is public, NEVER show spinner on navigation!
   const showSpinner =
     !hasResolved.current &&
-    !isPublicPath(pathname) &&
+    !isPublicPath(pathname, true) &&
     (authLoading || settingsLoading || !gateReady);
 
   if (showSpinner) {
