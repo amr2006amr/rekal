@@ -35,7 +35,7 @@ export interface UserSettings {
   level: CEFRLevel;
   daily_reviews_used: number;
   daily_reset_at: string;
-  subscription_status: 'free' | 'active';
+  subscription_status: 'free' | 'active' | 'past_due';
   // Optional: only populated for signed-in users (calculated server-side
   // inside record_review()). Guest/local settings won't have these, so
   // every read site must fall back with ?? 0 / ?? null.
