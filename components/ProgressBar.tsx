@@ -8,7 +8,7 @@ interface ProgressBarProps {
   currentIdx: number;
   totalCards: number;
   dailyReviewsUsed: number;
-  subscriptionStatus?: 'free' | 'active';
+  subscriptionStatus?: 'free' | 'active' | 'past_due';
 }
 
 export function ProgressBar({
